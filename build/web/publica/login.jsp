@@ -9,8 +9,7 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>Biblioteca web</title>
-        <script src="https://cdn.tailwindcss.com"></script>
+        <%@ include file="/configuraciones.jsp"%>
     </head>
     <body>
         <div class="flex items-center justify-center w-screen h-screen">

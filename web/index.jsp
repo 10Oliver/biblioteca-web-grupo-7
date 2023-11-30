@@ -8,9 +8,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>Biblioteca - Colegio Amigos De Don Bosco</title>
-        <script src="https://cdn.tailwindcss.com"></script>
+        <%@ include file="/configuraciones.jsp"%>
     </head>
     <body>
         <div class="flex h-screen flex-col bg-slate-100">
