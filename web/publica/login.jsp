@@ -38,7 +38,7 @@
         </div>
         <script>
             document.getElementById("botonInciarSesion").addEventListener("click", function () {
-                window.location.href = "../privada/panelPrincipal.jsp";
+                window.location.href = "${contextPath}/privada/panelPrincipal.jsp";
             });
         </script>
     </body>
