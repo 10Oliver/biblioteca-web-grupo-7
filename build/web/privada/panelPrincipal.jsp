@@ -6,6 +6,9 @@
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
+<%
+    int vistaSeleccionada = 0;
+%>
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -24,7 +27,19 @@
                     <a class="my-1 w-full bg-teal-600 py-3 pl-3 font-medium text-white hover:bg-teal-500 focus:bg-teal-400 focus:text-gray-800" href="">Préstamo</a>
                     <a class="my-1 w-full bg-teal-600 py-3 pl-3 font-medium text-white hover:bg-teal-500 focus:bg-teal-400 focus:text-gray-800" href="">Configuraciones</a>
                 </div>
-                <div id="contenedor" class="col-span-9 col-start-4"></div>
+                <div id="contenedor" class="col-span-9 col-start-4">
+                    <% if (vistaSeleccionada == 1) {%>
+                    <%@ include file="${contextPath}privada/vistas/usuarios.jsp"%>
+                    <%} else if (vistaSeleccionada == 2) {%>
+                    <%@ include file="${contextPath}privada/vistas/inventario.jsp"%>
+                    <%} else if (vistaSeleccionada == 3) {%>
+                    <%@ include file="${contextPath}privada/vistas/prestamo.jsp"%>
+                    <%} else if (vistaSeleccionada == 4) {%>
+                    <%@ include file="${contextPath}privada/vistas/configuraciones.jsp"%>
+                    <%} else {%>
+                    <h1>Sorry mi estimado</h1
+                    <%}%>
+                </div>
             </div>
         </div>
     </body>
