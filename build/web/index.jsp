@@ -16,9 +16,9 @@
                 <span class="text-lg">Biblioteca - Colegio Amigos De Don Bosco</span>
                 <a href="publica/login.jsp" class="rounded-md bg-blue-950 px-3 py-2">Iniciar sesión</a>
             </div>
-            <div class="grid flex-1 grid-cols-12 bg-green-100">
-                <div class="col-span-3 col-start-1 bg-white">Categorias</div>
-                <div class="col-span-9 col-start-4 bg-purple-100">Contenido</div>
+            <div class="grid flex-1 grid-cols-12">
+                <div class="col-span-3 col-start-1 bg-slate-100">Categorias</div>
+                <div class="col-span-9 col-start-4">Contenido</div>
             </div>
         </div>
     </body>
