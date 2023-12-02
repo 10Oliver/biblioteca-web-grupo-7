@@ -12,6 +12,6 @@
         <%@ include file="/configuraciones.jsp"%>
     </head>
     <body>
-        <h1>Configuraciones</h1>
+        <h1>Prestamos</h1>
     </body>
 </html>

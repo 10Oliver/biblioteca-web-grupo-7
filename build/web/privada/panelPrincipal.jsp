@@ -7,7 +7,11 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <%
-    int vistaSeleccionada = 0;
+    Integer vistaSeleccionada = (Integer) request.getAttribute("vistaSeleccionada");
+
+    if (vistaSeleccionada == null) {
+        vistaSeleccionada = 0; // Este es tu valor por defecto
+    }
 %>
 <html>
     <head>
@@ -22,20 +26,20 @@
             </div>
             <div class="grid flex-1 grid-cols-12">
                 <div class="col-span-3 col-start-1 flex flex-col items-center justify-center bg-white">
-                    <a class="my-1 w-full bg-teal-600 py-3 pl-3 font-medium text-white hover:bg-teal-500 focus:bg-teal-400 focus:text-gray-800" href="">Usuarios</a>
-                    <a class="my-1 w-full bg-teal-600 py-3 pl-3 font-medium text-white hover:bg-teal-500 focus:bg-teal-400 focus:text-gray-800" href="">Inventario</a>
-                    <a class="my-1 w-full bg-teal-600 py-3 pl-3 font-medium text-white hover:bg-teal-500 focus:bg-teal-400 focus:text-gray-800" href="">Préstamo</a>
-                    <a class="my-1 w-full bg-teal-600 py-3 pl-3 font-medium text-white hover:bg-teal-500 focus:bg-teal-400 focus:text-gray-800" href="">Configuraciones</a>
+                    <a class="my-1 w-full bg-teal-600 py-3 pl-3 font-medium text-white hover:bg-teal-500 focus:bg-teal-400 focus:text-gray-800" href="${contextPath}/panel.do?vista=usuario">Usuarios</a>
+                    <a class="my-1 w-full bg-teal-600 py-3 pl-3 font-medium text-white hover:bg-teal-500 focus:bg-teal-400 focus:text-gray-800" href="${contextPath}/panel.do?vista=inventario">Inventario</a>
+                    <a class="my-1 w-full bg-teal-600 py-3 pl-3 font-medium text-white hover:bg-teal-500 focus:bg-teal-400 focus:text-gray-800" href="${contextPath}/panel.do?vista=prestamo">Préstamo</a>
+                    <a class="my-1 w-full bg-teal-600 py-3 pl-3 font-medium text-white hover:bg-teal-500 focus:bg-teal-400 focus:text-gray-800" href="${contextPath}/panel.do?vista=configuracion">Configuraciones</a>
                 </div>
                 <div id="contenedor" class="col-span-9 col-start-4">
                     <% if (vistaSeleccionada == 1) {%>
-                    <%@ include file="${contextPath}privada/vistas/usuarios.jsp"%>
+                    <%@ include file="./vistas/usuarios.jsp"%>
                     <%} else if (vistaSeleccionada == 2) {%>
-                    <%@ include file="${contextPath}privada/vistas/inventario.jsp"%>
+                    <%@ include file="./vistas/inventario.jsp"%>
                     <%} else if (vistaSeleccionada == 3) {%>
-                    <%@ include file="${contextPath}privada/vistas/prestamo.jsp"%>
+                    <%@ include file="./vistas/prestamo.jsp"%>
                     <%} else if (vistaSeleccionada == 4) {%>
-                    <%@ include file="${contextPath}privada/vistas/configuraciones.jsp"%>
+                    <%@ include file="./vistas/configuraciones.jsp"%>
                     <%} else {%>
                     <h1>Sorry mi estimado</h1
                     <%}%>
@@ -44,3 +48,6 @@
         </div>
     </body>
 </html>
+
+<script>
+</script>
