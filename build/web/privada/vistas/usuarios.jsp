@@ -4,6 +4,13 @@
     Author     : Oliver
 --%>
 
+<%@page import="java.util.Map"%>
+<%@page import="java.util.List"%>
+<%
+    List<Map<String, String>> listaUsuarios = (List<Map<String, String>>) request.getAttribute("usuarios");
+    Integer color = 0;
+%>
+
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
@@ -32,135 +39,107 @@
                     </div>
                     <!-- end: Termina cabezado de la tabla-->
                     <!-- begin: Empieza contenido de la tabla-->
+                    <% for (Map<String, String> infoUsuario : listaUsuarios) {%>
+                    <% if (color % 2 == 0) {%>
                     <div class="flex items-center bg-blue-200 py-2">
-                        <div class="w-2/12 px-2">oliver</div>
-                        <div class="w-3/12 px-2">oliver_erazo@oliver.com</div>
-                        <div class="w-2/12 px-2">2023-10-10</div>
-                        <div class="w-2/12 px-2">74854152</div>
-                        <div class="w-2/12 px-2">Administrador</div>
-                        <div class="w-2/12 px-2">
-                            <a onClick="abrirRestableceModal(1)" class="inline-block rounded-md bg-purple-400 px-5"
-                               ><span>Restablecer</span><br />
-                                <span>contraseña</span></a
-                            >
-                        </div>
-                    </div>
-                    <div class="flex items-center bg-blue-50 py-2">
-                        <div class="w-2/12 px-2">oliver</div>
-                        <div class="w-3/12 px-2">oliver_erazo@oliver.com</div>
-                        <div class="w-2/12 px-2">2023-10-10</div>
-                        <div class="w-2/12 px-2">74854152</div>
-                        <div class="w-2/12 px-2">Administrador</div>
-                        <div class="w-2/12 px-2">
-                            <a onClick="abrirRestableceModal(1)" class="inline-block rounded-md bg-purple-400 px-5"
-                               ><span>Restablecer</span><br />
-                                <span>contraseña</span></a
-                            >
-                        </div>
-                    </div>
-                    <div class="flex items-center bg-blue-200 py-2">
-                        <div class="w-2/12 px-2">oliver</div>
-                        <div class="w-3/12 px-2">oliver_erazo@oliver.com</div>
-                        <div class="w-2/12 px-2">2023-10-10</div>
-                        <div class="w-2/12 px-2">74854152</div>
-                        <div class="w-2/12 px-2">Administrador</div>
-                        <div class="w-2/12 px-2">
-                            <a onClick="abrirRestableceModal(1)" class="inline-block rounded-md bg-purple-400 px-5"
-                               ><span>Restablecer</span><br />
-                                <span>contraseña</span></a
-                            >
-                        </div>
-                    </div>
-                    <div class="flex items-center bg-blue-50 py-2">
-                        <div class="w-2/12 px-2">oliver</div>
-                        <div class="w-3/12 px-2">oliver_erazo@oliver.com</div>
-                        <div class="w-2/12 px-2">2023-10-10</div>
-                        <div class="w-2/12 px-2">74854152</div>
-                        <div class="w-2/12 px-2">Administrador</div>
-                        <div class="w-2/12 px-2">
-                            <a onClick="abrirRestableceModal(1)" class="inline-block rounded-md bg-purple-400 px-5"
-                               ><span>Restablecer</span><br />
-                                <span>contraseña</span></a
-                            >
-                        </div>
-                    </div>
-                    <!-- end_ Terminar contenido de la tabla-->
-                </div>
-            </div>
-        </div>
+                        <%} else {%>
+                        <div class="flex items-center bg-blue-50 py-2">
+                            <%}%>
 
-        <!-- Modal para agregar un nuevo usuario -->
-        <div id="agregarUsuarios" class="fixed inset-0 z-10 hidden overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
-            <div class="flex min-h-screen items-center justify-center">
-                <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" aria-hidden="true"></div>
-                <!-- Ajustamos el tamaño de este div -->
-                <div class="h-auto w-4/6 transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:align-middle">
-                    <form action="" method="post">
-                        <div class="bg-white px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
-                            <h3 class="text-lg font-medium leading-6 text-gray-900">Agregar un nuevo usuario</h3>
-                            <div class="mt-8 flex flex-wrap">
-                                <div class="my-1 w-1/2 px-3 py-1">
-                                    <input type="text" class="m-0 w-full rounded-lg bg-slate-200 px-2 py-2" name="" id="" placeholder="Escribe el nombre de usuario..." />
-                                </div>
-                                <div class="my-1 w-1/2 px-3 py-1">
-                                    <input type="email" class="m-0 w-full rounded-lg bg-slate-200 px-2 py-2" name="" id="" placeholder="Escribe el correo del usuario..." />
-                                </div>
-                                <div class="my-1 w-1/2 px-3 py-1">
-                                    <input type="date" class="m-0 w-full rounded-lg bg-slate-200 px-2 py-2" name="" id="" placeholder="Escribe la fecha de nacimiento..." />
-                                </div>
-                                <div class="my-1 w-1/2 px-3 py-1">
-                                    <input type="tel" class="m-0 w-full rounded-lg bg-slate-200 px-2 py-2" name="" id="" placeholder="Escribe el teléfono..." />
-                                </div>
-                                <div class="my-1 w-1/2 px-3 py-1">
-                                    <select name="" class="m-0 w-full rounded-lg bg-slate-200 px-2 py-2" id="">
-                                        <option value="" selected disabled>Seleccione el rol</option>
-                                        <option value="">Administrador</option>
-                                        <option value="">Maestro</option>
-                                        <option value="">Estudiante</option>
-                                    </select>
-                                </div>
-                                <div class="my-1 w-1/2 px-3 py-1">
-                                    <input type="password" class="m-0 w-full rounded-lg bg-slate-200 px-2 py-2" name="" id="" placeholder="Escribe la contraseña..." />
-                                </div>
-                                <div class="py-1p-1 my-1 w-1/2 px-3">
-                                    <input type="password" class="m-0 w-full rounded-lg bg-slate-200 px-2 py-2" name="" id="" placeholder="Confirma la contraseña..." />
-                                </div>
+                            <div class="w-2/12 px-2"><%=infoUsuario.get("usuario")%></div>
+                            <div class="w-3/12 px-2"><%=infoUsuario.get("correo")%></div>
+                            <div class="w-2/12 px-2"><%=infoUsuario.get("fecha")%></div>
+                            <div class="w-2/12 px-2"><%=infoUsuario.get("telefono")%></div>
+                            <div class="w-2/12 px-2"><%=infoUsuario.get("rol")%></div>
+                            <div class="w-2/12 px-2">
+                                <a onClick="abrirRestableceModal(<%=infoUsuario.get("id")%>)" class="inline-block rounded-md bg-purple-400 px-5"
+                                   ><span>Restablecer</span><br />
+                                    <span>contraseña</span></a
+                                >
                             </div>
                         </div>
-                        <div class="px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
-                            <button type="button" id="cerrarModal" class="mt-3 inline-flex w-full justify-center rounded-md border border-transparent bg-blue-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-blue-700 focus:outline-none sm:ml-3 sm:mt-0 sm:w-auto sm:text-sm">Cerrar</button>
-                            <button type="submit" class="mt-3 inline-flex w-full justify-center rounded-md border border-transparent bg-blue-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-blue-700 focus:outline-none sm:ml-3 sm:mt-0 sm:w-auto sm:text-sm">Agregar</button>
-                        </div>
-                    </form>
+
+                        <%
+                                color++;
+                            }
+                        %>
+                        <!-- end_ Terminar contenido de la tabla-->
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <!-- Modal para restabler la contraseña-->
-        <div id="restablecerModal" class="fixed inset-0 z-10 hidden overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
-            <div class="flex min-h-screen items-center justify-center">
-                <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" aria-hidden="true"></div>
-                <div class="h-auto w-4/6 transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:align-middle">
-                    <div class="bg-white px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
-                        <h3 class="text-lg font-medium leading-6 text-gray-900">Restablecer contraseña</h3>
+            <!-- Modal para agregar un nuevo usuario -->
+            <div id="agregarUsuarios" class="fixed inset-0 z-10 hidden overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+                <div class="flex min-h-screen items-center justify-center">
+                    <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" aria-hidden="true"></div>
+                    <!-- Ajustamos el tamaño de este div -->
+                    <div class="h-auto w-4/6 transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:align-middle">
                         <form action="" method="post">
-                            <div class="mb-8 mt-8 flex flex-wrap">
-                                <div class="my-1 w-1/2 px-3 py-1">
-                                    <input type="password" class="m-0 w-full rounded-lg bg-slate-200 px-2 py-2" name="" id="" placeholder="Escribe la nueva contraseña..." />
-                                </div>
-                                <div class="py-1p-1 my-1 w-1/2 px-3">
-                                    <input type="password" class="m-0 w-full rounded-lg bg-slate-200 px-2 py-2" name="" id="" placeholder="Confirma la nueva contraseña..." />
+                            <div class="bg-white px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
+                                <h3 class="text-lg font-medium leading-6 text-gray-900">Agregar un nuevo usuario</h3>
+                                <div class="mt-8 flex flex-wrap">
+                                    <div class="my-1 w-1/2 px-3 py-1">
+                                        <input type="text" class="m-0 w-full rounded-lg bg-slate-200 px-2 py-2" name="" id="" placeholder="Escribe el nombre de usuario..." />
+                                    </div>
+                                    <div class="my-1 w-1/2 px-3 py-1">
+                                        <input type="email" class="m-0 w-full rounded-lg bg-slate-200 px-2 py-2" name="" id="" placeholder="Escribe el correo del usuario..." />
+                                    </div>
+                                    <div class="my-1 w-1/2 px-3 py-1">
+                                        <input type="date" class="m-0 w-full rounded-lg bg-slate-200 px-2 py-2" name="" id="" placeholder="Escribe la fecha de nacimiento..." />
+                                    </div>
+                                    <div class="my-1 w-1/2 px-3 py-1">
+                                        <input type="tel" class="m-0 w-full rounded-lg bg-slate-200 px-2 py-2" name="" id="" placeholder="Escribe el teléfono..." />
+                                    </div>
+                                    <div class="my-1 w-1/2 px-3 py-1">
+                                        <select name="" class="m-0 w-full rounded-lg bg-slate-200 px-2 py-2" id="">
+                                            <option value="" selected disabled>Seleccione el rol</option>
+                                            <option value="">Administrador</option>
+                                            <option value="">Maestro</option>
+                                            <option value="">Estudiante</option>
+                                        </select>
+                                    </div>
+                                    <div class="my-1 w-1/2 px-3 py-1">
+                                        <input type="password" class="m-0 w-full rounded-lg bg-slate-200 px-2 py-2" name="" id="" placeholder="Escribe la contraseña..." />
+                                    </div>
+                                    <div class="py-1p-1 my-1 w-1/2 px-3">
+                                        <input type="password" class="m-0 w-full rounded-lg bg-slate-200 px-2 py-2" name="" id="" placeholder="Confirma la contraseña..." />
+                                    </div>
                                 </div>
                             </div>
                             <div class="px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
-                                <button type="button" id="cerrarRestablecer" class="mt-3 inline-flex w-full justify-center rounded-md border border-transparent bg-blue-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-blue-700 focus:outline-none sm:ml-3 sm:mt-0 sm:w-auto sm:text-sm">Cerrar</button>
-                                <button type="submit" class="mt-3 inline-flex w-full justify-center rounded-md border border-transparent bg-blue-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-blue-700 focus:outline-none sm:ml-3 sm:mt-0 sm:w-auto sm:text-sm">Restablecer</button>
+                                <button type="button" id="cerrarModal" class="mt-3 inline-flex w-full justify-center rounded-md border border-transparent bg-blue-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-blue-700 focus:outline-none sm:ml-3 sm:mt-0 sm:w-auto sm:text-sm">Cerrar</button>
+                                <button type="submit" class="mt-3 inline-flex w-full justify-center rounded-md border border-transparent bg-blue-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-blue-700 focus:outline-none sm:ml-3 sm:mt-0 sm:w-auto sm:text-sm">Agregar</button>
                             </div>
                         </form>
                     </div>
                 </div>
             </div>
-        </div>
+
+            <!-- Modal para restabler la contraseña-->
+            <div id="restablecerModal" class="fixed inset-0 z-10 hidden overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+                <div class="flex min-h-screen items-center justify-center">
+                    <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" aria-hidden="true"></div>
+                    <div class="h-auto w-4/6 transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:align-middle">
+                        <div class="bg-white px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
+                            <h3 class="text-lg font-medium leading-6 text-gray-900">Restablecer contraseña</h3>
+                            <form action="" method="post">
+                                <div class="mb-8 mt-8 flex flex-wrap">
+                                    <div class="my-1 w-1/2 px-3 py-1">
+                                        <input type="password" class="m-0 w-full rounded-lg bg-slate-200 px-2 py-2" name="" id="" placeholder="Escribe la nueva contraseña..." />
+                                    </div>
+                                    <div class="py-1p-1 my-1 w-1/2 px-3">
+                                        <input type="password" class="m-0 w-full rounded-lg bg-slate-200 px-2 py-2" name="" id="" placeholder="Confirma la nueva contraseña..." />
+                                    </div>
+                                </div>
+                                <div class="px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
+                                    <button type="button" id="cerrarRestablecer" class="mt-3 inline-flex w-full justify-center rounded-md border border-transparent bg-blue-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-blue-700 focus:outline-none sm:ml-3 sm:mt-0 sm:w-auto sm:text-sm">Cerrar</button>
+                                    <button type="submit" class="mt-3 inline-flex w-full justify-center rounded-md border border-transparent bg-blue-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-blue-700 focus:outline-none sm:ml-3 sm:mt-0 sm:w-auto sm:text-sm">Restablecer</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
     </body>
 </html>

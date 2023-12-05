@@ -12,6 +12,11 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Map;
+import java.util.HashMap;
+
 /**
  *
  * @author Oliver
@@ -27,6 +32,9 @@ public class panelPrincipalControlador extends HttpServlet {
             switch(vista) {
                 case "usuario":
                     request.setAttribute("vistaSeleccionada", 1);
+                    // Se colocan los datos del usuario
+                    request.setAttribute("usuarios", this.generarUsuarios());
+                    request.getRequestDispatcher("privada/vistas/usuarios.jsp").forward(request, response);
                     break;
                 case "inventario":
                     request.setAttribute("vistaSeleccionada", 2);
@@ -43,9 +51,27 @@ public class panelPrincipalControlador extends HttpServlet {
                     request.setAttribute("vistaSeleccionada", 0);
                     break;
             }
+            // Se envia la petición al panel principal
             RequestDispatcher dispatcher = request.getRequestDispatcher("privada/panelPrincipal.jsp");
         dispatcher.forward(request, response);
         } catch(Exception e) {
         }
+    }
+    private List<Map<String, String>> generarUsuarios() {
+        // Crear la lista de mapas
+        List<Map<String, String>> lista = new ArrayList<>();
+
+        // Crear los mapas y añadirlos a la lista
+        for (int i = 0; i < 5; i++) {
+            Map<String, String> mapa = new HashMap<>();
+            mapa.put("id", "ID" + i);
+            mapa.put("usuario", "Usuario" + i);
+            mapa.put("correo", "Correo" + i);
+            mapa.put("fecha", "Fecha" + i);
+            mapa.put("telefono", "Teléfono" + i);
+            mapa.put("rol", "Rol" + i);
+            lista.add(mapa);
+        }
+        return lista;
     }
 }
