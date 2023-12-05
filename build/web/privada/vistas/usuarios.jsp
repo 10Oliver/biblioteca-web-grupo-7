@@ -52,7 +52,7 @@
                             <div class="w-2/12 px-2"><%=infoUsuario.get("telefono")%></div>
                             <div class="w-2/12 px-2"><%=infoUsuario.get("rol")%></div>
                             <div class="w-2/12 px-2">
-                                <a onClick="abrirRestableceModal(<%=infoUsuario.get("id")%>)" class="inline-block rounded-md bg-purple-400 px-5"
+                                <a onClick="abrirRestableceModal('<%=infoUsuario.get("id")%>')" class="inline-block rounded-md bg-purple-400 px-5"
                                    ><span>Restablecer</span><br />
                                     <span>contraseña</span></a
                                 >
@@ -124,6 +124,8 @@
                             <h3 class="text-lg font-medium leading-6 text-gray-900">Restablecer contraseña</h3>
                             <form action="" method="post">
                                 <div class="mb-8 mt-8 flex flex-wrap">
+                                    <!-- Input para colocar el ID y enviarlo en el post-->
+                                    <input type="text" id="idRestablecer" name="id" class="hidden"/>
                                     <div class="my-1 w-1/2 px-3 py-1">
                                         <input type="password" class="m-0 w-full rounded-lg bg-slate-200 px-2 py-2" name="" id="" placeholder="Escribe la nueva contraseña..." />
                                     </div>
