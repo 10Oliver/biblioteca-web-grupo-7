@@ -4,10 +4,13 @@
     Author     : Oliver
 --%>
 
+<%@page import="java.util.Map"%>
+<%@page import="java.util.List"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <%
     Integer vistaSeleccionada = (Integer) request.getAttribute("vistaSeleccionada");
+    List<Map<String, String>> listaUsuarios = (List<Map<String, String>>) request.getAttribute("listaUsuarios");
 
     if (vistaSeleccionada == null) {
         vistaSeleccionada = 0; // Este es tu valor por defecto
@@ -33,7 +36,9 @@
                 </div>
                 <div id="contenedor" class="col-span-9 col-start-4">
                     <% if (vistaSeleccionada == 1) {%>
-                    <%@ include file="./vistas/usuarios.jsp"%>
+                    <jsp:include page="./vistas/usuarios.jsp">
+                        <jsp:param name="listaUsuarios" value="${listaUsuarios}" />
+                    </jsp:include>
                     <%} else if (vistaSeleccionada == 2) {%>
                     <%@ include file="./vistas/inventario.jsp"%>
                     <%} else if (vistaSeleccionada == 3) {%>

@@ -34,7 +34,6 @@ public class panelPrincipalControlador extends HttpServlet {
                     request.setAttribute("vistaSeleccionada", 1);
                     // Se colocan los datos del usuario
                     request.setAttribute("usuarios", this.generarUsuarios());
-                    request.getRequestDispatcher("privada/vistas/usuarios.jsp").forward(request, response);
                     break;
                 case "inventario":
                     request.setAttribute("vistaSeleccionada", 2);
