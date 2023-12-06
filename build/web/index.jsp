@@ -21,13 +21,15 @@
     </div>
 
     <!-- Contenido principal -->
-    <div class="flex flex-1 items-center justify-center mt-[-180px]"> <!-- Ajusté 'mt-[-100px]' para un margen superior más negativo -->
+    <div class="flex flex-1 items-center justify-center mt-[-180px]">
         <!-- Cuadros de Categorías en el lado izquierdo -->
         <div class="p-4">
-            <a href="#" class="rounded-md bg-blue-950 px-3 py-2 mb-2 text-white block">Categoría 1</a>
-            <a href="#" class="rounded-md bg-blue-950 px-3 py-2 mb-2 text-white block">Categoría 2</a>
-            <a href="#" class="rounded-md bg-blue-950 px-3 py-2 mb-2 text-white block">Categoría 3</a>
-            <a href="#" class="rounded-md bg-blue-950 px-3 py-2 mb-2 text-white block">Categoría 4</a>
+            <!-- Enlace para ir a la vista de Categoría 1 -->
+            <a href="publica/vista/DVDS.jsp" class="rounded-md bg-blue-950 px-3 py-2 mb-2 text-white block">DVDS</a>
+            <!-- Agrega enlaces similares para otras categorías si es necesario -->
+            <a href="publica/vista/CDS.jsp" class="rounded-md bg-blue-950 px-3 py-2 mb-2 text-white block">CDS</a>
+            <a href="publica/vista/Libros.jsp" class="rounded-md bg-blue-950 px-3 py-2 mb-2 text-white block">libros</a>
+            <a href="publica/vista/Revistas.jsp" class="rounded-md bg-blue-950 px-3 py-2 mb-2 text-white block">Revistas</a>
         </div>
 
         <!-- Contenido en el centro -->
