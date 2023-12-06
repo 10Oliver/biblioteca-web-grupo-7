@@ -10,10 +10,15 @@
 <!DOCTYPE html>
 <%
     Integer vistaSeleccionada = (Integer) request.getAttribute("vistaSeleccionada");
+    Integer vistaInventario = (Integer) request.getAttribute("vistaInventario");
     List<Map<String, String>> listaUsuarios = (List<Map<String, String>>) request.getAttribute("listaUsuarios");
 
     if (vistaSeleccionada == null) {
         vistaSeleccionada = 0; // Este es tu valor por defecto
+    }
+
+    if (vistaInventario == null) {
+        vistaInventario = 0;
     }
 %>
 <html>
@@ -40,7 +45,13 @@
                         <jsp:param name="listaUsuarios" value="${listaUsuarios}" />
                     </jsp:include>
                     <%} else if (vistaSeleccionada == 2) {%>
+                    <% if (vistaInventario == 0) {%>
                     <%@ include file="./vistas/inventario.jsp"%>
+                    <%} else if (vistaInventario == 1) {%>
+                    <%@ include file="./componentes/buscarProducto.jsp"%>
+                    <%} else if (vistaInventario == 2) {%>
+                    <p>Te la creiste we XD</p>
+                    <%}%>
                     <%} else if (vistaSeleccionada == 3) {%>
                     <%@ include file="./vistas/prestamo.jsp"%>
                     <%} else if (vistaSeleccionada == 4) {%>

@@ -1,6 +1,6 @@
 <%-- 
-    Document   : tabla.jsp
-    Created on : 12-04-2023, 07:55:21 PM
+    Document   : buscarProducto
+    Created on : 12-05-2023, 08:47:06 PM
     Author     : Oliver
 --%>
 
@@ -9,10 +9,9 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <%@ include file="/configuraciones.jsp"%>
+        <title>JSP Page</title>
     </head>
     <body>
-        param1: <%= request.getParameter("encabezados")%><br />
-        param2: <%= request.getParameter("datos")%>
+        <h1>Llegaste a busquedas</h1>
     </body>
 </html>

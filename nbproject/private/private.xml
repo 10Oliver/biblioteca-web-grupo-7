@@ -3,11 +3,12 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/Oliver-Dev/proyects/biblioteca-web-grupo-7/web/publica/login.jsp</file>
-            <file>file:/C:/Users/Oliver-Dev/proyects/biblioteca-web-grupo-7/web/configuraciones.jsp</file>
-            <file>file:/C:/Users/Oliver-Dev/proyects/biblioteca-web-grupo-7/web/privada/panelPrincipal.jsp</file>
-            <file>file:/C:/Users/Oliver-Dev/proyects/biblioteca-web-grupo-7/src/java/controladores/panelPrincipalControlador.java</file>
-            <file>file:/C:/Users/Oliver-Dev/proyects/biblioteca-web-grupo-7/web/privada/vistas/usuarios.jsp</file>
+            <file>file:/D:/Documentos/NetBeansProjects/biblioteca_web/web/index.jsp</file>
+            <file>file:/D:/Documentos/NetBeansProjects/biblioteca_web/web/privada/componentes/tabla.jsp</file>
+            <file>file:/D:/Documentos/NetBeansProjects/biblioteca_web/src/java/controladores/panelPrincipalControlador.java</file>
+            <file>file:/D:/Documentos/NetBeansProjects/biblioteca_web/web/privada/vistas/usuarios.jsp</file>
+            <file>file:/D:/Documentos/NetBeansProjects/biblioteca_web/web/configuraciones.jsp</file>
+            <file>file:/D:/Documentos/NetBeansProjects/biblioteca_web/web/privada/panelPrincipal.jsp</file>
         </group>
     </open-files>
 </project-private>
