@@ -6,7 +6,7 @@
 <%@page import="java.util.Map"%>
 <%@page import="java.util.List"%>
 <%
-    List<Map<String, String>> listaUsuarios = (List<Map<String, String>>) request.getAttribute("produ8ctos");
+    //List<Map<String, String>> listaUsuarios = (List<Map<String, String>>) request.getAttribute("productos");
     Integer color = 0;
 %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
