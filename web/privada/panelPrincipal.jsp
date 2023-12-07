@@ -11,6 +11,7 @@
 <%
     Integer vistaSeleccionada = (Integer) request.getAttribute("vistaSeleccionada");
     Integer vistaInventario = (Integer) request.getAttribute("vistaInventario");
+    Integer vistaProceso = (Integer) request.getAttribute("proceso");
     List<Map<String, String>> listaUsuarios = (List<Map<String, String>>) request.getAttribute("listaUsuarios");
 
     if (vistaSeleccionada == null) {
@@ -19,6 +20,10 @@
 
     if (vistaInventario == null) {
         vistaInventario = 0;
+    }
+    
+if (vistaProceso == null) {
+        vistaProceso = 0;
     }
 %>
 <html>
@@ -53,7 +58,14 @@
                     <p>Te la creiste we XD</p>
                     <%}%>
                     <%} else if (vistaSeleccionada == 3) {%>
+                    <%if (vistaProceso == 1) {%>
+                    <%@ include file="./componentes/crearPrestamo.jsp"%>
+                    <%} else if (vistaProceso == 2) {%>
+                    <%@ include file="./componentes/crearDevolucion.jsp"%>
+                    <%} else {%>
                     <%@ include file="./vistas/prestamo.jsp"%>
+                    <%}%>
+                    
                     <%} else if (vistaSeleccionada == 4) {%>
                     <%@ include file="./vistas/configuraciones.jsp"%>
                     <%} else {%>

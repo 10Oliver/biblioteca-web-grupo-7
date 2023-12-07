@@ -1,4 +1,4 @@
-package controladores;
+package navegabilidad;
 
 
 import java.io.IOException;
