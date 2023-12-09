@@ -18,6 +18,7 @@
             </div>
             <div class="grid flex-1 grid-cols-12">
                 <div class="col-span-3 col-start-1 bg-slate-100">Categorias</div>
+                
                 <div class="col-span-9 col-start-4">Contenido</div>
             </div>
         </div>
