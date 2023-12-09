@@ -1,13 +1,16 @@
-package conf.sv.edu.udb.www.Recursos.Models.Utils;
+package sv.edu.udb.www.Recursos.Models.Utils;
 
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-import conf.sv.edu.udb.www.Recursos.Conexion.ConnectionDb;
+import sv.edu.udb.www.Recursos.Conexion.ConnectionDb;
 public class Usuario {
 private int id;
     private String nombreUsuario;
@@ -216,5 +219,73 @@ private int id;
         }
         return password;
     }
+
+    public String toJson() {
+        Map<String, Object> jsonMap = new HashMap<>();
+        jsonMap.put("id", getId());
+        jsonMap.put("nombreUsuario", getNombreUsuario());
+        jsonMap.put("contrasena", getContrasena());
+        jsonMap.put("correo", getCorreo());
+        jsonMap.put("fechaNacimiento", getFechaNacimiento());
+        jsonMap.put("passTemporal", getPassTemporal());
+        jsonMap.put("telefono", getTelefono());
+        jsonMap.put("idRol", getIdRol());
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        String formattedFechaNacimiento = dateFormat.format(getFechaNacimiento());
+
+        jsonMap.put("formattedFechaNacimiento", formattedFechaNacimiento);
+
+        StringBuilder jsonString = new StringBuilder("{");
+        for (Map.Entry<String, Object> entry : jsonMap.entrySet()) {
+            jsonString.append("\"").append(entry.getKey()).append("\":\"").append(entry.getValue()).append("\",");
+        }
+        jsonString.deleteCharAt(jsonString.length() - 1); // Remove the trailing comma
+        jsonString.append("}");
+
+        return jsonString.toString();
+    }
+    public Usuario selectUsuarioByUsername(ConnectionDb connection) {
+        Usuario usuario = null;
+        try {
+            PreparedStatement statement = connection.getConnection().prepareStatement(SELECT_USER_BY_NAME);
+            statement.setString(1, getNombreUsuario());
+            ResultSet resultSet = statement.executeQuery();
+
+            if (resultSet.next()) {
+                setId(resultSet.getInt("id"));
+                setNombreUsuario(resultSet.getString("NombreUsuario"));
+                setContrasena(resultSet.getString("contrasena"));
+                setCorreo(resultSet.getString("correo"));
+                setFechaNacimiento(resultSet.getDate("fechaNacimiento"));
+                setPassTemporal(resultSet.getString("passTemporal"));
+                setTelefono(resultSet.getInt("telefono"));
+                setIdRol(resultSet.getInt("idRol"));
+
+                usuario = new Usuario(getId(), getNombreUsuario(), getContrasena(), getCorreo(), getFechaNacimiento(),
+                        getPassTemporal(), getTelefono(), getIdRol());
+
+            } else {
+                System.out.println("No User found with the provided username.");
+            }
+        } catch (SQLException e) {
+            System.out.println("Error occurred while selecting user by username: " + e.getMessage());
+            e.printStackTrace();
+        }
+        return usuario;
+    }
+
+    public static String listToJson(List<Usuario> usuarioList) {
+    StringBuilder jsonListString = new StringBuilder("[");
+    for (Usuario usuario : usuarioList) {
+        jsonListString.append(usuario.toJson()).append(",");
+    }
+    if (!usuarioList.isEmpty()) {
+        jsonListString.deleteCharAt(jsonListString.length() - 1); // Remove the trailing comma
+    }
+    jsonListString.append("]");
+
+    return jsonListString.toString();
+}
 
 }

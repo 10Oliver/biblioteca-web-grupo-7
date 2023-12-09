@@ -1,4 +1,4 @@
-package conf.sv.edu.udb.www.Recursos.Controllers;
+package sv.edu.udb.www.Recursos.Controllers;
 
 import java.io.IOException;
 import java.sql.Date;
@@ -11,33 +11,59 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.log4j.LogManager;
-import org.apache.log4j.Logger;
-
-import conf.sv.edu.udb.www.Recursos.Conexion.ConnectionDb;
-import conf.sv.edu.udb.www.Recursos.Models.RecursosFisicos.Libro;
+import sv.edu.udb.www.Recursos.Conexion.ConnectionDb;
+import sv.edu.udb.www.Recursos.Models.StatusResponseIntern;
+import sv.edu.udb.www.Recursos.Models.RecursosFisicos.Libro;
 @WebServlet("/LibroController")
 public class LibroController extends HttpServlet{
-    private static final Logger logger = LogManager.getLogger(LibroController.class);
 
      protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String libroCode = request.getParameter("code");
-
+        String action = request.getParameter("action");
+        String busqueda = request.getParameter("busqueda");
+        String jsonResponse = null;
         try (ConnectionDb connection = new ConnectionDb()) {
-            if (libroCode != null) {
-                Libro libro = new Libro(libroCode);
-                libro = libro.selectLibro(connection);
-                request.setAttribute("libroDetails", libro);
-                request.getRequestDispatcher("/libroDetails.jsp").forward(request, response);
-            } else {
-                Libro libroModel = new Libro();
-                List<Libro> libros = libroModel.selectAllLibros(connection);
-                request.setAttribute("allLibros", libros);
-                request.getRequestDispatcher("/allLibros.jsp").forward(request, response);
+            if(action!=null){
+
+                switch (action) {
+                    case "codigo":
+                        jsonResponse = ByCode(connection,busqueda);
+                        response.setContentType("application/json");
+                        response.getWriter().write(jsonResponse);
+                        break;
+                    case "autor":
+                        jsonResponse = ByAutor(connection,busqueda);
+                        response.setContentType("application/json");
+                        response.getWriter().write(jsonResponse);
+                        break;
+                    case "genero":
+                        jsonResponse = ByGenero(connection,busqueda);
+                        response.setContentType("application/json");
+                        response.getWriter().write(jsonResponse);
+                        break;
+                    case "editorial":
+                        jsonResponse = ByEditorial(connection,busqueda);
+                        response.setContentType("application/json");
+                        response.getWriter().write(jsonResponse);
+                        break;
+                    case "titulo":
+                        jsonResponse = ByTitulo(connection,busqueda);
+                        response.setContentType("application/json");
+                        response.getWriter().write(jsonResponse);
+                        break;
+                    default:
+                        jsonResponse = GetAll(connection);
+                        response.setContentType("application/json");
+                        response.getWriter().write(jsonResponse);
+                        break;
             }
+            }else{
+                jsonResponse = GetAll(connection);
+                        response.setContentType("application/json");
+                        response.getWriter().write(jsonResponse);
+            }
+
         } catch (SQLException e) {
-            logger.error("Error retrieving libros: " + e.getMessage());
             response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Error retrieving libros");
         }
     }
@@ -49,11 +75,12 @@ public class LibroController extends HttpServlet{
             // Insert the new Libro into the database
             newLibro.insertLibro(connection);
 
-            // Redirect or forward to another page as needed
-            response.sendRedirect("/success.jsp");
+            StatusResponseIntern message = new StatusResponseIntern("Successfully Created",200);
+            String jsonResponse = message.StatusCode();
+            response.setContentType("application/json");
+            response.getWriter().write(jsonResponse);
         } catch (SQLException e) {
             // Log and handle the error
-            logger.error("Error inserting new Libro: " + e.getMessage());
             response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Error inserting new Libro");
         }
     }
@@ -63,23 +90,20 @@ public class LibroController extends HttpServlet{
         String libroCode = request.getParameter("code");
         if (libroCode != null) {
             try (ConnectionDb connection = new ConnectionDb()) {
-                Libro libroModel = new Libro(libroCode);
-                Libro existingLibro = libroModel.selectLibro(connection);
-                if (existingLibro != null) {
-                    // Update Libro details based on request parameters
-                    existingLibro.setTitulo(request.getParameter("titulo"));
-                    existingLibro.setAutor(request.getParameter("autor"));
-                    // ... (update other fields)
+                Libro existingLibro = extractLibroFromRequest(request);
+                existingLibro.setCodigoIdentificacion(libroCode);
 
                     // Update the Libro in the database
                     existingLibro.updateLibro(connection);
+                    StatusResponseIntern message = new StatusResponseIntern("Successfully Updated",200);
+                    String jsonResponse = message.StatusCode();
+                    response.setContentType("application/json");
+                    response.getWriter().write(jsonResponse);
                     response.getWriter().println("Libro Updated Successfully");
-                } else {
-                    response.getWriter().println("Libro Not Found");
-                }
-            } catch (SQLException e) {
-                // Handle database connection or update errors
-                e.printStackTrace();
+                } catch (SQLException e) {
+                    // Handle database connection or update errors
+                    e.printStackTrace();
+                    response.getWriter().println("Libro Not Found"+libroCode);
             }
         } else {
             response.getWriter().println("Libro Code is required for update");
@@ -92,15 +116,18 @@ public class LibroController extends HttpServlet{
         if (libroCode != null) {
             try (ConnectionDb connection = new ConnectionDb()) {
                 Libro libroModel = new Libro(libroCode);
-                Libro existingLibro = libroModel.selectLibro(connection);
-                if (existingLibro != null) {
+                // Libro existingLibro = libroModel.selectLibro(connection);
+                // if (existingLibro != null) {
                     // Delete the Libro from the database
-                    existingLibro.deleteLibro(connection);
-                    response.getWriter().println("Libro Deleted Successfully");
-                } else {
-                    response.getWriter().println("Libro Not Found");
-                }
-            } catch (SQLException e) {
+                    libroModel.deleteLibro(connection);
+                    StatusResponseIntern message = new StatusResponseIntern("Successfully Deleted",200);
+                    String jsonResponse = message.StatusCode();
+                    response.setContentType("application/json");
+                    response.getWriter().write(jsonResponse);
+                // } else {
+                    // }
+                } catch (SQLException e) {
+                response.getWriter().println("Libro Not Found");
                 // Handle database connection or deletion errors
                 e.printStackTrace();
             }
@@ -134,5 +161,54 @@ public class LibroController extends HttpServlet{
         // Create and return a new Libro object
         return new Libro(titulo, fechaPublicacion, stock, nombreEstante, numeroPaginas, autor, editorial, isbn, edicion, lugarPublicacion, genero, idioma, notas);
     }
+
+    private String ByAutor(ConnectionDb connection,String busqueda){
+        Libro lb = new Libro();
+        lb.setAutor(busqueda);
+        lb.selectLibroByAutor(connection);
+
+        String jsonResponse = lb.toJson();
+        return jsonResponse;
+    }
+    private String ByTitulo(ConnectionDb connection,String busqueda){
+        Libro lb = new Libro();
+        lb.setTitulo(busqueda);
+        lb.selectLibroByTitulo(connection);
+
+        String jsonResponse = lb.toJson();
+        return jsonResponse;
+    }
+    private String ByGenero(ConnectionDb connection,String busqueda){
+        Libro lb = new Libro();
+        lb.setGenero(busqueda);
+        lb.selectLibroByGenero(connection);
+
+        String jsonResponse = lb.toJson();
+        return jsonResponse;
+    }
+    private String ByEditorial(ConnectionDb connection,String busqueda){
+        Libro lb = new Libro();
+        lb.setEditorial(busqueda);
+        lb.selectLibroByEditorial(connection);
+
+        String jsonResponse = lb.toJson();
+        return jsonResponse;
+    }
+
+    private String ByCode(ConnectionDb connection,String busqueda){
+        Libro lb = new Libro(busqueda);
+        lb.selectLibro(connection);
+
+        String jsonResponse = lb.toJson();
+        return jsonResponse;
+    }
+
+    private String GetAll(ConnectionDb connection){
+    Libro lb = new Libro();
+    List<Libro> lbs = lb.selectAllLibros(connection);
+    String jsonResponse = Libro.listLibrosToJson(lbs);
+
+    return jsonResponse;
+}
 
 }

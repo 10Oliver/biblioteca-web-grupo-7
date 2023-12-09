@@ -1,4 +1,4 @@
-package conf.sv.edu.udb.www.Recursos.Controllers;
+package sv.edu.udb.www.Recursos.Controllers;
 import java.io.IOException;
 import java.sql.Date;
 import java.sql.SQLException;
@@ -10,46 +10,76 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.log4j.LogManager;
-import org.apache.log4j.Logger;
-
-import conf.sv.edu.udb.www.Recursos.Conexion.ConnectionDb;
-import conf.sv.edu.udb.www.Recursos.Models.RecursosDigitales.Ebook;
+import sv.edu.udb.www.Recursos.Conexion.ConnectionDb;
+import sv.edu.udb.www.Recursos.Models.StatusResponseIntern;
+import sv.edu.udb.www.Recursos.Models.RecursosDigitales.Ebook;
 
 @WebServlet("/EbookController")
 public class EbookController extends HttpServlet{
-    private static final Logger logger = LogManager.getLogger(EbookController.class);
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         // Retrieve a specific Ebook by its code
-        String ebookCode = request.getParameter("code");
-        if (ebookCode != null) {
+        String action = request.getParameter("action");
+        String busqueda = request.getParameter("busqueda");
 
             try(ConnectionDb connection = new ConnectionDb()) {
+                String jsonResponse = null;
+                if(action != null){
+                    switch (action) {
+                        case "codigo":
+                            response.setContentType("application/json");
 
-                Ebook ebook = new Ebook(ebookCode);
-                ebook = ebook.selectEbook(connection);
-                // Set the Ebook details as an attribute and forward to the details JSP page
-                request.setAttribute("ebookDetails", ebook);
-                request.getRequestDispatcher("/ebookDetails.jsp").forward(request, response);
+                            jsonResponse = ByCode(connection,busqueda);
+                            response.getWriter().write(jsonResponse);
+                            break;
+                        case "autor":
+                            response.setContentType("application/json");
+
+                            jsonResponse = ByAutor(connection,busqueda);
+                            response.getWriter().write(jsonResponse);
+                            break;
+                        case "editorial":
+                            response.setContentType("application/json");
+
+                            jsonResponse = ByEditorial(connection,busqueda);
+                            response.getWriter().write(jsonResponse);
+                            break;
+                        case "genero":
+                            response.setContentType("application/json");
+
+                            jsonResponse = ByGenero(connection,busqueda);
+                            response.getWriter().write(jsonResponse);
+                            break;
+                        case "idioma":
+                            response.setContentType("application/json");
+
+                            jsonResponse = ByIdioma(connection,busqueda);
+                            response.getWriter().write(jsonResponse);
+                            break;
+                        case "titulo":
+                            response.setContentType("application/json");
+
+                            jsonResponse = ByTitulo(connection,busqueda);
+                            response.getWriter().write(jsonResponse);
+                            break;
+
+                        default:
+                            response.setContentType("application/json");
+
+                            jsonResponse = GetAll(connection);
+                            response.getWriter().write(jsonResponse);
+                            break;
+                        }
+                    }else{
+                        response.setContentType("application/json");
+
+                                jsonResponse = GetAll(connection);
+                                response.getWriter().write(jsonResponse);
+                    }
             } catch (SQLException e) {
                 // Log and handle the error
-                logger.error("Error retrieving Ebook details: " + e.getMessage());
                 response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Error retrieving Ebook details");
-            }
-        } else {
-            // Retrieve all Ebooks
-            try(ConnectionDb connection = new ConnectionDb();) {
-                Ebook ebookModel = new Ebook();
-                List<Ebook> ebooks = ebookModel.selectAllEbooks(connection);
-                // You can use the list of Ebooks to display details or perform other actions
-                response.getWriter().println("All Ebooks: " + ebooks.toString());
-            } catch (SQLException e) {
-                // Log and handle the error
-                logger.error("Error retrieving all Ebooks: " + e.getMessage());
-                response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Error retrieving all Ebooks");
-            }
         }
     }
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
@@ -59,13 +89,17 @@ public class EbookController extends HttpServlet{
             Ebook newEbook = extractEbookFromRequest(request);
             newEbook.insertEbook(connection);
             // Redirect or forward to another page as needed
-            response.sendRedirect("/success.jsp");
+            StatusResponseIntern message = new StatusResponseIntern("Successfully Created",200);
+            String jsonResponse = message.StatusCode();
+            response.setContentType("application/json");
+            response.getWriter().write(jsonResponse);
         } catch (SQLException e) {
             // Log and handle database connection or insertion errors
-            logger.error("Error inserting Ebook: " + e.getMessage());
-            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Error inserting Ebook");
+            StatusResponseIntern jsonResponse = new StatusResponseIntern("Ebook no se agrego correctamente",500);
+            response.getWriter().write(jsonResponse.StatusCode());
         }
     }
+
     protected void doPut(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
 // Logic for handling PUT requests (updating an existing Ebook in the database)
@@ -73,19 +107,21 @@ String ebookCode = request.getParameter("code");
 if (ebookCode != null) {
 
     try(ConnectionDb connection = new ConnectionDb()) {
-        Ebook existingEbook = new Ebook(ebookCode);
-        existingEbook = existingEbook.selectEbook(connection);
-        if (existingEbook != null) {
+        // Ebook existingEbook = new Ebook(ebookCode);
+
+        // existingEbook = existingEbook.selectEbook(connection);
+        // if (existingEbook != null) {
             Ebook updatedEbook = extractEbookFromRequest(request);
             updatedEbook.setCodigoIdentificacion(ebookCode);
             updatedEbook.updateEbook(connection);
-            response.getWriter().println("Ebook Updated Successfully");
-        } else {
-            response.getWriter().println("Ebook Not Found");
-        }
-    } catch (SQLException e) {
+            StatusResponseIntern jsonResponse = new StatusResponseIntern("Ebook actualizado exitosamente",200);
+            response.getWriter().write(jsonResponse.StatusCode());
+        // } else {
+            // }
+        } catch (SQLException e) {
+        StatusResponseIntern jsonResponse = new StatusResponseIntern("Ebook no se actualizo exitosamente",500);
+        response.getWriter().write(jsonResponse.StatusCode());
         // Log and handle database connection or update errors
-        logger.error("Error updating Ebook: " + e.getMessage());
         response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Error updating Ebook");
     }
 } else {
@@ -99,16 +135,17 @@ protected void doDelete(HttpServletRequest request, HttpServletResponse response
         if (ebookCode != null) {
             try(ConnectionDb connection = new ConnectionDb()) {
                 Ebook existingEbook = new Ebook(ebookCode);
-                existingEbook = existingEbook.selectEbook(connection);
-                if (existingEbook != null) {
+                // existingEbook = existingEbook.selectEbook(connection);
+                // if (existingEbook != null) {
                     existingEbook.deleteEbook(connection);
-                    response.getWriter().println("Ebook Deleted Successfully");
-                } else {
-                    response.getWriter().println("Ebook Not Found");
-                }
-            } catch (SQLException e) {
+                    StatusResponseIntern jsonResponse = new StatusResponseIntern("Ebook borrado exitosamente",200);
+            response.getWriter().write(jsonResponse.StatusCode());
+                // } else {
+                    // }
+                } catch (SQLException e) {
+                StatusResponseIntern jsonResponse = new StatusResponseIntern("Ebook no se borro correctamente",500);
+                response.getWriter().write(jsonResponse.StatusCode());
                 // Log and handle database connection or deletion errors
-                logger.error("Error deleting Ebook: " + e.getMessage());
                 response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Error deleting Ebook");
             }
         } else {
@@ -137,5 +174,67 @@ protected void doDelete(HttpServletRequest request, HttpServletResponse response
         return new Ebook(titulo, fechaPublicacion, stock, nombreEstante, genero, autor, editorial, numeroPaginas, url, isbn, edicion, lugarPublicacion, idioma, notas);
     }
 
+private String ByAutor(ConnectionDb connection,String busqueda)
+{
+    Ebook ebook = new Ebook();
+    ebook.setAutor(busqueda);
+
+    ebook.selectEbookByAutor(connection);
+
+    return ebook.toJson();
+}
+private String ByTitulo(ConnectionDb connection,String busqueda)
+{
+    Ebook ebook = new Ebook();
+    ebook.setTitulo(busqueda);
+
+    ebook.selectEbookByTitulo(connection);
+
+    return ebook.toJson();
+}
+private String ByGenero(ConnectionDb connection,String busqueda)
+{
+    Ebook ebook = new Ebook();
+    ebook.setGenero(busqueda);
+
+    ebook.selectEbookByGenero(connection);
+
+    return ebook.toJson();
+}
+private String ByIdioma(ConnectionDb connection,String busqueda)
+{
+    Ebook ebook = new Ebook();
+    ebook.setIdioma(busqueda);
+
+    ebook.selectEbookByIdioma(connection);
+
+    return ebook.toJson();
+}
+private String ByEditorial(ConnectionDb connection,String busqueda)
+{
+    Ebook ebook = new Ebook();
+    ebook.setEditorial(busqueda);
+
+    ebook.selectEbookByEditorial(connection);
+
+    return ebook.toJson();
+}
+
+private String ByCode(ConnectionDb connection,String busqueda){
+    Ebook ebook = new Ebook(busqueda);
+
+
+    ebook.selectEbook(connection);
+
+    return ebook.toJson();
+}
+
+private String GetAll(ConnectionDb connection){
+    Ebook ek = new Ebook();
+    List<Ebook> eks = ek.selectAllEbooks(connection);
+    String jsonResponse = Ebook.listEbooksToJson(eks);
+
+    return jsonResponse;
+}
 
 }

@@ -1,4 +1,4 @@
-package conf.sv.edu.udb.www.Recursos.Models;
+package sv.edu.udb.www.Recursos.Models;
 
 import java.sql.Date;
 

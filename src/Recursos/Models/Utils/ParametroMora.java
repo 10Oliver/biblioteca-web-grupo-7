@@ -1,12 +1,14 @@
-package conf.sv.edu.udb.www.Recursos.Models.Utils;
+package sv.edu.udb.www.Recursos.Models.Utils;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-import conf.sv.edu.udb.www.Recursos.Conexion.ConnectionDb;
+import sv.edu.udb.www.Recursos.Conexion.ConnectionDb;
 
 public class ParametroMora {
     private int idParametros;
@@ -150,5 +152,22 @@ public class ParametroMora {
             e.printStackTrace();
         }
         return param;
+    }
+
+    public String toJson() {
+        Map<String, Object> jsonMap = new HashMap<>();
+        jsonMap.put("idParametros", getIdParametros());
+        jsonMap.put("mora", getMora());
+        jsonMap.put("maxPrestamo", getMaxPrestamo());
+        jsonMap.put("idRol", getIdRol());
+
+        StringBuilder jsonString = new StringBuilder("{");
+        for (Map.Entry<String, Object> entry : jsonMap.entrySet()) {
+            jsonString.append("\"").append(entry.getKey()).append("\":\"").append(entry.getValue()).append("\",");
+        }
+        jsonString.deleteCharAt(jsonString.length() - 1); // Remove the trailing comma
+        jsonString.append("}");
+
+        return jsonString.toString();
     }
 }

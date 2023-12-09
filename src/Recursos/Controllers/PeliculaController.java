@@ -1,4 +1,4 @@
-package conf.sv.edu.udb.www.Recursos.Controllers;
+package sv.edu.udb.www.Recursos.Controllers;
 
 import java.io.IOException;
 import java.sql.Date;
@@ -11,50 +11,68 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.log4j.LogManager;
-import org.apache.log4j.Logger;
-
-import conf.sv.edu.udb.www.Recursos.Conexion.ConnectionDb;
-import conf.sv.edu.udb.www.Recursos.Models.RecursosDigitales.Pelicula;
+import sv.edu.udb.www.Recursos.Conexion.ConnectionDb;
+import sv.edu.udb.www.Recursos.Models.StatusResponseIntern;
+import sv.edu.udb.www.Recursos.Models.RecursosDigitales.Pelicula;
 
 @WebServlet("/PeliculaController")
 public class PeliculaController extends HttpServlet {
-private static final Logger logger = LogManager.getLogger(PeliculaController.class);
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         // Logic to retrieve a specific Pelicula by its code
-        String codigoIdentificacion = request.getParameter("codigoIdentificacion");
-        if (codigoIdentificacion != null) {
-            // Logic to retrieve Pelicula details from the database based on the code
-
+        String busqueda = request.getParameter("busqueda");
+        String action = request.getParameter("action");
+        String jsonResponse = null;
             try(ConnectionDb connection = new ConnectionDb()) {
-                Pelicula pelicula = new Pelicula(codigoIdentificacion);
-                pelicula = pelicula.selectPelicula(connection);
+                if(action != null){
 
-                // Set the Pelicula details as an attribute and forward to the details JSP page
-                request.setAttribute("peliculaDetails", pelicula);
-                request.getRequestDispatcher("/peliculaDetails.jsp").forward(request, response);
+                    switch (action) {
+                        case "codigo":
+                            jsonResponse = ByCode(connection, busqueda);
+                            response.setContentType("application/json");
+                            response.getWriter().write(jsonResponse);
+                            break;
+                        case "titulo":
+                            jsonResponse = ByTitulo(connection, busqueda);
+                            response.setContentType("application/json");
+                            response.getWriter().write(jsonResponse);
+                            break;
+                        case "genero":
+                            jsonResponse = ByGenero(connection, busqueda);
+                            response.setContentType("application/json");
+                            response.getWriter().write(jsonResponse);
+                            break;
+                        case "director":
+                            jsonResponse = ByDirector(connection, busqueda);
+                            response.setContentType("application/json");
+                            response.getWriter().write(jsonResponse);
+                            break;
+                        case "productor":
+                            jsonResponse = ByProductor(connection, busqueda);
+                            response.setContentType("application/json");
+                            response.getWriter().write(jsonResponse);
+                            break;
+
+                        default:
+                        response.setContentType("application/json");
+
+                        jsonResponse = GetAll(connection);
+                        response.getWriter().write(jsonResponse);
+                            break;
+                }
+                }else{
+                    response.setContentType("application/json");
+
+                        jsonResponse = GetAll(connection);
+                        response.getWriter().write(jsonResponse);
+                }
             } catch (SQLException e) {
                 // Log and handle the error
-                logger.error("Error retrieving Pelicula details: " + e.getMessage());
                 response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Error retrieving Pelicula details");
             }
-        } else {
-            // Retrieve all Peliculas
-            try(ConnectionDb connection = new ConnectionDb()) {
-                Pelicula peliculaModel = new Pelicula();
-                List<Pelicula> peliculas = peliculaModel.selectAllPeliculas(connection);
-
-                // You can use the list of Peliculas to display details or perform other actions
-                response.getWriter().println("All Peliculas: " + peliculas.toString());
-            } catch (SQLException e) {
-                // Log and handle the error
-                logger.error("Error retrieving all Peliculas: " + e.getMessage());
-                response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Error retrieving all Peliculas");
-            }
         }
-    }
+
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         // Logic to insert a new Pelicula
@@ -64,11 +82,13 @@ private static final Logger logger = LogManager.getLogger(PeliculaController.cla
 
             // Insert the new Pelicula into the database
             newPelicula.insertPelicula(connection);
-
-            response.getWriter().println("New Pelicula inserted successfully!");
+            StatusResponseIntern message = new StatusResponseIntern("Successfully Created",200);
+            String jsonResponse = message.StatusCode();
+            response.setContentType("application/json");
+            response.getWriter().write(jsonResponse);
         } catch (SQLException e) {
             // Log and handle the error
-            logger.error("Error inserting new Pelicula: " + e.getMessage());
+
             response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Error inserting new Pelicula");
         }
     }
@@ -78,33 +98,40 @@ private static final Logger logger = LogManager.getLogger(PeliculaController.cla
 // Logic to update an existing Pelicula
 try(ConnectionDb connection = new ConnectionDb()) {
     // Extract Pelicula details from the request
-    Pelicula updatedPelicula = extractPeliculaFromRequest(request);
+    String code = request.getParameter("code");
+    if(code != null)
+    {
+        Pelicula updatedPelicula = extractPeliculaFromRequest(request);
+        updatedPelicula.setCodigoIdentificacion(code);
+        // Update the existing Pelicula in the database
+        updatedPelicula.updatePelicula(connection);
 
-    // Update the existing Pelicula in the database
-    updatedPelicula.updatePelicula(connection);
+        StatusResponseIntern res = new StatusResponseIntern("pelicula was successfully updated",200);
+        response.getWriter().write(res.StatusCode());
 
-    response.getWriter().println("Pelicula updated successfully!");
+    }
 } catch (SQLException e) {
     // Log and handle the error
-    logger.error("Error updating Pelicula: " + e.getMessage());
+
     response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Error updating Pelicula");
 }
 }
 protected void doDelete(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         // Logic to delete an existing Pelicula
-
+        String code = request.getParameter("code");
         try(ConnectionDb connection = new ConnectionDb()) {
             // Extract Pelicula details from the request
-            Pelicula deletedPelicula = extractPeliculaFromRequest(request);
+            Pelicula deletedPelicula = new Pelicula(code);
 
             // Delete the existing Pelicula from the database
             deletedPelicula.deletePelicula(connection);
 
-            response.getWriter().println("Pelicula deleted successfully!");
+            StatusResponseIntern res = new StatusResponseIntern("pelicula was successfully registered",200);
+            response.getWriter().write(res.StatusCode());
         } catch (SQLException e) {
             // Log and handle the error
-            logger.error("Error deleting Pelicula: " + e.getMessage());
+
             response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Error deleting Pelicula");
         }
     }
@@ -126,5 +153,48 @@ protected void doDelete(HttpServletRequest request, HttpServletResponse response
 
     // Create and return a new Pelicula object
     return new Pelicula(titulo, fechaPublicacion, stock, nombreEstante, genero, director, duracion, productor, paisCiudad);
+}
+
+private String ByTitulo(ConnectionDb connection,String busqueda){
+    Pelicula pl = new Pelicula();
+    pl.setTitulo(busqueda);
+    pl.selectPeliculaByTitulo(connection);
+
+    return pl.toJson();
+}
+private String ByDirector(ConnectionDb connection,String busqueda){
+    Pelicula pl = new Pelicula();
+    pl.setDirector(busqueda);
+    pl.selectPeliculaByDirector(connection);
+
+    return pl.toJson();
+}
+private String ByGenero(ConnectionDb connection,String busqueda){
+    Pelicula pl = new Pelicula();
+    pl.setGenero(busqueda);
+    pl.selectPeliculaByGenero(connection);
+
+    return pl.toJson();
+}
+private String ByProductor(ConnectionDb connection,String busqueda){
+    Pelicula pl = new Pelicula();
+    pl.setProductor(busqueda);
+    pl.selectPeliculaByProductor(connection);
+
+    return pl.toJson();
+}
+private String ByCode(ConnectionDb connection,String busqueda){
+    Pelicula pl = new Pelicula(busqueda);
+    pl.selectPelicula(connection);
+
+    return pl.toJson();
+}
+
+private String GetAll(ConnectionDb connection){
+    Pelicula pl = new Pelicula();
+    List<Pelicula> pls = pl.selectAllPeliculas(connection);
+    String jsonResponse = Pelicula.listPeliculasToJson(pls);
+
+    return jsonResponse;
 }
 }

@@ -1,4 +1,4 @@
-package conf.sv.edu.udb.www.Recursos.Controllers;
+package sv.edu.udb.www.Recursos.Controllers;
 
 import java.io.IOException;
 import java.sql.Date;
@@ -11,43 +11,64 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.log4j.LogManager;
-import org.apache.log4j.Logger;
-
-import conf.sv.edu.udb.www.Recursos.Conexion.ConnectionDb;
-import conf.sv.edu.udb.www.Recursos.Models.RecursosFisicos.Revista;
+import sv.edu.udb.www.Recursos.Conexion.ConnectionDb;
+import sv.edu.udb.www.Recursos.Models.StatusResponseIntern;
+import sv.edu.udb.www.Recursos.Models.RecursosFisicos.Revista;
 
 @WebServlet("/RevistaController")
 public class RevistaController extends HttpServlet {
 
-    private static final Logger logger = LogManager.getLogger(RevistaController.class);
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         // Retrieve a specific Revista by its code
-        String revistaCode = request.getParameter("code");
-
+        String action = request.getParameter("action");
+        String busqueda = request.getParameter("busqueda");
+        String jsonResponse = null;
         try (ConnectionDb connection = new ConnectionDb()) {
-            if (revistaCode != null) {
-                // Logic to retrieve Revista details from the database based on the code
-                Revista revista = new Revista(revistaCode);
-                revista = revista.selectRevista(connection);
+            if(action != null){
 
-                // Set the Revista details as an attribute and forward to the details JSP page
-                request.setAttribute("revistaDetails", revista);
-                request.getRequestDispatcher("/revistaDetails.jsp").forward(request, response);
-            } else {
-                // Retrieve all Revistas
-                Revista revistaModel = new Revista();
-                List<Revista> revistas = revistaModel.selectAllRevistas(connection);
+                switch (action) {
+                    case "codigo":
+                        // Handle the select by ID action
+                        selectRevistaById(connection, busqueda);
+                        response.setContentType("application/json");
+                        response.getWriter().write(jsonResponse);
+                        break;
+                    case "titulo":
 
-                // You can use the list of Revistas to display details or perform other actions
-                request.setAttribute("allRevistas", revistas);
-                request.getRequestDispatcher("/allRevistas.jsp").forward(request, response);
+                        selectRevistaByTitulo(connection, busqueda);
+                        response.setContentType("application/json");
+                        response.getWriter().write(jsonResponse);
+                        break;
+                    case "autor":
+
+                        selectRevistaByAutor(connection, busqueda);
+                        response.setContentType("application/json");
+                        response.getWriter().write(jsonResponse);
+                        break;
+                    case "editorial":
+
+                        jsonResponse = selectRevistaByEditorial(connection, busqueda);
+                        response.setContentType("application/json");
+                        response.getWriter().write(jsonResponse);
+                        break;
+                    default:
+                    jsonResponse = GetAll(connection);
+                    response.setContentType("application/json");
+                    response.getWriter().write(jsonResponse);
+                        break;
             }
-        } catch (SQLException e) {
+        }else{
+            jsonResponse = GetAll(connection);
+                    response.setContentType("application/json");
+                    response.getWriter().write(jsonResponse);
+        }
+        // response.setContentType("application/json");
+        // response.getWriter().write(jsonResponse);
+    } catch (SQLException e) {
             // Log and handle the error
-            logger.error("Error retrieving Revistas: " + e.getMessage());
+
             response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Error retrieving Revistas");
         }
     }
@@ -59,11 +80,14 @@ public class RevistaController extends HttpServlet {
 
         try (ConnectionDb connection = new ConnectionDb()) {
             newRevista.insertRevista(connection);
-            response.sendRedirect("/success.jsp");
+            StatusResponseIntern message = new StatusResponseIntern("Successfully Created",200);
+            String jsonResponse = message.StatusCode();
+            response.setContentType("application/json");
+            response.getWriter().write(jsonResponse);
 
         } catch (SQLException e) {
             // Log and handle the error
-            logger.error("Error inserting new Revista: " + e.getMessage());
+
             response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Error inserting new Revista");
         }
     }
@@ -76,21 +100,18 @@ public class RevistaController extends HttpServlet {
             // Logic to update Revista details in the database based on the code
 
             try (ConnectionDb connection = new ConnectionDb()) {
-                Revista revistaModel = new Revista(revistaCode);
-                Revista existingRevista = revistaModel.selectRevista(connection);
-                if (existingRevista != null) {
-                    // Update Revista details based on request parameters
-                    existingRevista.setTitulo(request.getParameter("titulo"));
-                    existingRevista.setAutor(request.getParameter("autor"));
-                    // ... (update other fields)
+
+                    Revista existingRevista = extractRevistaFromRequest(request);
+                    existingRevista.setCodigoIdentificacion(revistaCode);
 
                     // Update the Revista in the database
                     existingRevista.updateRevista(connection);
-                    response.getWriter().println("Revista Updated Successfully");
-                } else {
-                    response.getWriter().println("Revista Not Found");
-                }
-            } catch (SQLException e) {
+                    StatusResponseIntern message = new StatusResponseIntern("Successfully Created",200);
+                    String jsonResponse = message.StatusCode();
+                    response.setContentType("application/json");
+                    response.getWriter().write(jsonResponse);
+                } catch (SQLException e) {
+                response.getWriter().println("Revista Not Found");
                 // Handle database connection or update errors
                 e.printStackTrace();
             }
@@ -107,15 +128,15 @@ public class RevistaController extends HttpServlet {
             // Logic to delete Revista from the database based on the code
             try (ConnectionDb connection = new ConnectionDb()) {
                 Revista revistaModel = new Revista(revistaCode);
-                Revista existingRevista = revistaModel.selectRevista(connection);
-                if (existingRevista != null) {
+                // Revista existingRevista = revistaModel.selectRevista(connection);
+                // if (existingRevista != null) {
                     // Delete the Revista from the database
-                    existingRevista.deleteRevista(connection);
+                    revistaModel.deleteRevista(connection);
                     response.getWriter().println("Revista Deleted Successfully");
-                } else {
-                    response.getWriter().println("Revista Not Found");
-                }
-            } catch (SQLException e) {
+                // } else {
+                    // }
+                } catch (SQLException e) {
+                response.getWriter().println("Revista Not Found");
                 // Handle database connection or deletion errors
                 e.printStackTrace();
             }
@@ -145,4 +166,39 @@ public class RevistaController extends HttpServlet {
         // Create and return a new Revista object
         return new Revista(titulo, fechaPublicacion, stock, nombreEstante, numeroPaginas, autor, isbn, periodicidad, paisCiudad, notas, editorial);
     }
+
+    private String selectRevistaById(ConnectionDb connection,String codigoIdentificacion) {
+        Revista revista = new Revista(codigoIdentificacion);
+        revista.selectRevista(connection);
+        return revista.toJson();
+    }
+
+    private String selectRevistaByTitulo(ConnectionDb connection,String titulo) {
+        Revista revista = new Revista();
+        revista.setTitulo(titulo);
+        revista.selectRevistaByTitulo(connection);
+        return revista.toJson();
+    }
+
+    private String selectRevistaByAutor(ConnectionDb connection,String autor) {
+        Revista revista = new Revista();
+        revista.setAutor(autor);
+        revista.selectRevistaByAutor(connection);
+        return revista.toJson();
+    }
+
+    private String selectRevistaByEditorial(ConnectionDb connection,String editorial) {
+        Revista revista = new Revista();
+        revista.setEditorial(editorial);
+        revista.selectRevistaByEditorial(connection);
+        return revista.toJson();
+    }
+
+    private String GetAll(ConnectionDb connection){
+    Revista rv = new Revista();
+    List<Revista> rvs = rv.selectAllRevistas(connection);
+    String jsonResponse = Revista.listRevistaToJson(rvs);
+
+    return jsonResponse;
+}
 }

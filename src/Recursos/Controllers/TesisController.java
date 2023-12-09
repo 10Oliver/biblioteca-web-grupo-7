@@ -1,4 +1,4 @@
-package conf.sv.edu.udb.www.Recursos.Controllers;
+package sv.edu.udb.www.Recursos.Controllers;
 
 import java.io.IOException;
 import java.sql.Date;
@@ -11,42 +11,61 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.log4j.LogManager;
-import org.apache.log4j.Logger;
-
-import conf.sv.edu.udb.www.Recursos.Conexion.ConnectionDb;
-import conf.sv.edu.udb.www.Recursos.Models.RecursosFisicos.Tesis;
+import sv.edu.udb.www.Recursos.Conexion.ConnectionDb;
+import sv.edu.udb.www.Recursos.Models.StatusResponseIntern;
+import sv.edu.udb.www.Recursos.Models.RecursosFisicos.Tesis;
 
 @WebServlet("/TesisController")
 public class TesisController extends HttpServlet{
-    private static final Logger logger = LogManager.getLogger(TesisController.class);
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         // Retrieve a specific Tesis by its code
-        String tesisCode = request.getParameter("code");
-
+        String busqueda = request.getParameter("busqueda");
+        String action = request.getParameter("action");
+        String jsonResponse = null;
         try (ConnectionDb connection = new ConnectionDb()) {
-            if (tesisCode != null) {
-                // Logic to retrieve Tesis details from the database based on the code
-                Tesis tesis = new Tesis(tesisCode);
-                tesis = tesis.selectTesis(connection);
+            if(action != null){
 
-                // Set the Tesis details as an attribute and forward to the details JSP page
-                request.setAttribute("tesisDetails", tesis);
-                request.getRequestDispatcher("/tesisDetails.jsp").forward(request, response);
-            } else {
-                // Retrieve all Tesis
-                Tesis tesisModel = new Tesis();
-                List<Tesis> tesisList = tesisModel.selectAllTesis(connection);
-
-                // You can use the list of Tesis to display details or perform other actions
-                request.setAttribute("allTesis", tesisList);
-                request.getRequestDispatcher("/allTesis.jsp").forward(request, response);
+                switch (action) {
+                    case "codigo":
+                        // Handle the select by ID action
+                        jsonResponse = handleSelectById(connection,busqueda);
+                        response.setContentType("application/json");
+                        response.getWriter().write(jsonResponse);
+                        break;
+                    case "titulo":
+                        // Handle the select by Titulo action
+                        jsonResponse = handleSelectByTitulo(connection,busqueda);
+                        response.setContentType("application/json");
+                        response.getWriter().write(jsonResponse);
+                        break;
+                    case "autor":
+                        // Handle the select by Autor action
+                        jsonResponse = handleSelectByAutor(connection,busqueda);
+                        response.setContentType("application/json");
+                        response.getWriter().write(jsonResponse);
+                        break;
+                    case "editorial":
+                        // Handle the select by Editorial action
+                        jsonResponse = handleSelectByEditorial(connection,busqueda);
+                        response.setContentType("application/json");
+                        response.getWriter().write(jsonResponse);
+                        break;
+                    default:
+                    jsonResponse = GetAll(connection);
+                    response.setContentType("application/json");
+                    response.getWriter().write(jsonResponse);
+                    break;
+            }
+            }else{
+                    jsonResponse = GetAll(connection);
+                    response.setContentType("application/json");
+                    response.getWriter().write(jsonResponse);
             }
         } catch (SQLException e) {
             // Log and handle the error
-            logger.error("Error retrieving Tesis: " + e.getMessage());
+
             response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Error retrieving Tesis");
         }
     }
@@ -58,11 +77,14 @@ public class TesisController extends HttpServlet{
 
         try (ConnectionDb connection = new ConnectionDb()) {
             newTesis.insertTesis(connection);
-            response.sendRedirect("/success.jsp");
+            StatusResponseIntern message = new StatusResponseIntern("Successfully Created",200);
+            String jsonResponse = message.StatusCode();
+            response.setContentType("application/json");
+            response.getWriter().write(jsonResponse);
 
         } catch (SQLException e) {
             // Log and handle the error
-            logger.error("Error inserting new Tesis: " + e.getMessage());
+
             response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Error inserting new Tesis");
         }
     }
@@ -75,21 +97,20 @@ public class TesisController extends HttpServlet{
             // Logic to update Tesis details in the database based on the code
 
             try (ConnectionDb connection = new ConnectionDb()) {
-                Tesis tesisModel = new Tesis(tesisCode);
-                Tesis existingTesis = tesisModel.selectTesis(connection);
-                if (existingTesis != null) {
-                    // Update Tesis details based on request parameters
-                    existingTesis.setTitulo(request.getParameter("titulo"));
-                    existingTesis.setAutor(request.getParameter("autor"));
-                    // ... (update other fields)
-
+                // Tesis tesisModel = new Tesis(tesisCode);
+                // Tesis existingTesis = tesisModel.selectTesis(connection);
+                // if (existingTesis != null) {
+                    Tesis existingTesis = extractTesisFromRequest(request);
+                    existingTesis.setCodigoIdentificacion(tesisCode);
                     // Update the Tesis in the database
                     existingTesis.updateTesis(connection);
-                    response.getWriter().println("Tesis Updated Successfully");
-                } else {
-                    response.getWriter().println("Tesis Not Found");
-                }
-            } catch (SQLException e) {
+                    StatusResponseIntern message = new StatusResponseIntern("Successfully Updated",200);
+                    String jsonResponse = message.StatusCode();
+                    response.setContentType("application/json");
+                    response.getWriter().write(jsonResponse);
+                    // }
+                } catch (SQLException e) {
+                response.getWriter().println("Tesis Not Found");
                 // Handle database connection or update errors
                 e.printStackTrace();
             }
@@ -106,15 +127,15 @@ public class TesisController extends HttpServlet{
             // Logic to delete Tesis from the database based on the code
             try (ConnectionDb connection = new ConnectionDb()) {
                 Tesis tesisModel = new Tesis(tesisCode);
-                Tesis existingTesis = tesisModel.selectTesis(connection);
-                if (existingTesis != null) {
+                // Tesis existingTesis = tesisModel.selectTesis(connection);
+                // if (existingTesis != null) {
                     // Delete the Tesis from the database
-                    existingTesis.deleteTesis(connection);
+                    tesisModel.deleteTesis(connection);
                     response.getWriter().println("Tesis Deleted Successfully");
-                } else {
-                    response.getWriter().println("Tesis Not Found");
-                }
-            } catch (SQLException e) {
+                // } else {
+                    // }
+                } catch (SQLException e) {
+                response.getWriter().println("Tesis Not Found");
                 // Handle database connection or deletion errors
                 e.printStackTrace();
             }
@@ -139,4 +160,76 @@ public class TesisController extends HttpServlet{
         // Create and return a new Tesis object
         return new Tesis(titulo, fechaPublicacion, stock, nombreEstante, numeroPaginas, autor, editorial, nivelAcademico, institucionAcademica, facultad);
     }
+
+    private String handleSelectById(ConnectionDb connection, String tesisCode) {
+        if (tesisCode != null) {
+            Tesis tesis = new Tesis(tesisCode);
+            tesis = tesis.selectTesis(connection);
+
+            if (tesis != null) {
+                return tesis.toJson();
+            } else {
+                return "{\"message\": \"Tesis not found\"}";
+            }
+        } else {
+            return "{\"message\": \"Tesis Code is required for selectById\"}";
+        }
+    }
+
+    private String handleSelectByTitulo(ConnectionDb connection, String titulo) {
+        if (titulo != null) {
+            Tesis tesis = new Tesis();
+            tesis.setTitulo(titulo);
+            Tesis selectedTesis = tesis.selectTesisByTitulo(connection);
+
+            if (selectedTesis != null) {
+                return selectedTesis.toJson();
+            } else {
+                return "{\"message\": \"No Tesis found with the provided Titulo\"}";
+            }
+        } else {
+            return "{\"message\": \"Titulo is required for selectByTitulo\"}";
+        }
+    }
+
+    private String handleSelectByAutor(ConnectionDb connection, String autor) {
+        if (autor != null) {
+            Tesis tesis = new Tesis();
+            tesis.setAutor(autor);
+            Tesis selectedTesis = tesis.selectTesisByAutor(connection);
+
+            if (selectedTesis != null) {
+                return selectedTesis.toJson();
+            } else {
+                return "{\"message\": \"No Tesis found with the provided Autor\"}";
+            }
+        } else {
+            return "{\"message\": \"Autor is required for selectByAutor\"}";
+        }
+    }
+
+    private String handleSelectByEditorial(ConnectionDb connection, String editorial) {
+        if (editorial != null) {
+            Tesis tesis = new Tesis();
+            tesis.setEditorial(editorial);
+            Tesis selectedTesis = tesis.selectTesisByEditorial(connection);
+
+            if (selectedTesis != null) {
+                return selectedTesis.toJson();
+            } else {
+                return "{\"message\": \"No Tesis found with the provided Editorial\"}";
+            }
+        } else {
+            return "{\"message\": \"Editorial is required for selectByEditorial\"}";
+        }
+    }
+
+private String GetAll(ConnectionDb connection){
+    Tesis ek = new Tesis();
+    List<Tesis> eks = ek.selectAllTesis(connection);
+    String jsonResponse = Tesis.listTesisToJson(eks);
+
+    return jsonResponse;
+}
+
 }

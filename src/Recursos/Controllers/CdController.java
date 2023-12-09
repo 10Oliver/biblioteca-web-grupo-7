@@ -1,4 +1,5 @@
-package conf.sv.edu.udb.www.Recursos.Controllers;
+package sv.edu.udb.www.Recursos.Controllers;
+
 
 import java.io.IOException;
 import java.sql.Date;
@@ -11,44 +12,73 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.log4j.LogManager;
-import org.apache.log4j.Logger;
-
-import conf.sv.edu.udb.www.Recursos.Conexion.ConnectionDb;
-import conf.sv.edu.udb.www.Recursos.Models.RecursosDigitales.Cd;
+import sv.edu.udb.www.Recursos.Conexion.ConnectionDb;
+import sv.edu.udb.www.Recursos.Models.StatusResponseIntern;
+import sv.edu.udb.www.Recursos.Models.RecursosDigitales.Cd;
 
 @WebServlet("/cdController")
 public class CdController extends HttpServlet {
-    // ConnectionDb connection = new ConnectionDb();
-    private static final Logger logger = LogManager.getLogger(CdController.class);
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         // Retrieve a specific CD by its code
-    String cdCode = request.getParameter("code");
+    String action = request.getParameter("action");
+    String busqueda = request.getParameter("busqueda");
 
     try (ConnectionDb connection = new ConnectionDb()) {
-        if (cdCode != null) {
+        String jsonResponse = null;
+        if (action != null) {
             // Logic to retrieve CD details from the database based on the code
-            Cd cd = new Cd(cdCode);
-            cd = cd.selectCd(connection);
+            switch (action) {
+                case "codigo":
+                jsonResponse = BuscarPorCodigo(connection,busqueda);
+                response.setContentType("application/json");
+
+                // Write the JSON-like data to the response
+                response.getWriter().write(jsonResponse);
+                    break;
+                case "autor":
+
+                jsonResponse = BuscarPorAutor(connection, busqueda);
+                response.setContentType("application/json");
+
+                // Write the JSON-like data to the response
+                response.getWriter().write(jsonResponse);
+                    break;
+                case "titulo":
+                    jsonResponse = BuscarPorTitulo(connection,busqueda);
+                    response.setContentType("application/json");
+
+                    // Write the JSON-like data to the response
+                    response.getWriter().write(jsonResponse);
+                    break;
+                case "genero":
+                    jsonResponse = BuscarPorGenero(connection, busqueda);
+                    response.setContentType("application/json");
+
+                    response.getWriter().write(jsonResponse);
+                    break;
+
+                default:
+
+                    break;
+            }
 
             // Set the CD details as an attribute and forward to the details JSP page
-            request.setAttribute("cdDetails", cd);
-            request.getRequestDispatcher("/cdDetails.jsp").forward(request, response);
+            // request.setAttribute("cdDetails", cd);
+            // request.getRequestDispatcher("/cdDetails.jsp").forward(request, response);
         } else {
-            // Retrieve all CDs
-            Cd cdModel = new Cd();
-            List<Cd> cds = cdModel.selectAllCds(connection);
+                jsonResponse = BuscarTodos(connection);
+                response.setContentType("application/json");
 
-            // You can use the list of CDs to display details or perform other actions
-            request.setAttribute("allCds", cds);
-            request.getRequestDispatcher("/allCds.jsp").forward(request, response);
+                // Write the JSON-like data to the response
+                response.getWriter().write(jsonResponse);
         }
     } catch (SQLException e) {
         // Log and handle the error
-        logger.error("Error retrieving CDs: " + e.getMessage());
+        // logger.error("Error retrieving CDs: " + e.getMessage());
         response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Error retrieving CDs");
+        response.getWriter().write(action);
     }
 
 
@@ -76,17 +106,16 @@ public class CdController extends HttpServlet {
         try(ConnectionDb connection = new ConnectionDb()) {
             // ConnectionDb connection = new ConnectionDb();
             newCd.insertCd(connection);
-            response.sendRedirect("/success.jsp");
+            StatusResponseIntern message = new StatusResponseIntern("Successfully Created",200);
+            String jsonResponse = message.StatusCode();
+            response.setContentType("application/json");
+            response.getWriter().write(jsonResponse);
 
         } catch (SQLException e) {
             // Log and handle the error
-            logger.error("Error inserting new CD: " + e.getMessage());
+            // logger.error("Error inserting new CD: " + e.getMessage());
             response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Error inserting new CD");
         }
-
-        // Redirect or forward to another page as needed
-        response.sendRedirect("/success.jsp");
-
     }
 
     protected void doPut(HttpServletRequest request, HttpServletResponse response)
@@ -100,15 +129,28 @@ public class CdController extends HttpServlet {
                 Cd cdModel = new Cd(cdCode);
                 Cd existingCd = cdModel.selectCd(connection);
                 if (existingCd != null) {
-                    // Update CD details based on request parameters
-                    // (you need to implement setter methods in the Cd class)
-                    existingCd.setTitulo(request.getParameter("titulo"));
-                    existingCd.setAutor(request.getParameter("autor"));
-                    // ... (update other fields)
+                    String titulo = request.getParameter("titulo");
+                    String autor = request.getParameter("autor");
+                    String numCanciones = request.getParameter("numCanciones");
+                    String genero = request.getParameter("genero");
+                    String fechaPublicacionStr = request.getParameter("fechaPublicacion");
+                    Date fechaPublicacion = Date.valueOf(fechaPublicacionStr);
+                    int stock = Integer.parseInt(request.getParameter("stock"));
+                    String nombreEstante = request.getParameter("nombreEstante");
 
                     // Update the CD in the database
+                    existingCd.setTitulo(titulo);
+                    existingCd.setAutor(autor);
+                    existingCd.setNumCanciones(numCanciones);
+                    existingCd.setGenero(genero);
+                    existingCd.setFechaPublicacion(fechaPublicacion);
+                    existingCd.setStock(stock);
+                    existingCd.setNombreEstante(nombreEstante);
+                    // Update the CD in the database
                     existingCd.updateCd(connection);
-                    response.getWriter().println("CD Updated Successfully");
+                    // response.getWriter().println("CD Updated Successfully");
+                    StatusResponseIntern jsonResponse = new StatusResponseIntern("Cd actualizado exitosamente",200);
+                    response.getWriter().write(jsonResponse.StatusCode());
                 } else {
                     response.getWriter().println("CD Not Found");
                 }
@@ -133,9 +175,14 @@ public class CdController extends HttpServlet {
                 if (existingCd != null) {
                     // Delete the CD from the database
                     existingCd.deleteCd(connection);
-                    response.getWriter().println("CD Deleted Successfully");
+                    // response.getWriter().println("CD Deleted Successfully");
+
+                    StatusResponseIntern jsonResponse = new StatusResponseIntern("Cd eliminado exitosamente",200);
+                    response.getWriter().write(jsonResponse.StatusCode());
                 } else {
-                    response.getWriter().println("CD Not Found");
+                    StatusResponseIntern jsonResponse = new StatusResponseIntern("Cd no se encontro en la bd",200);
+                    response.getWriter().write(jsonResponse.StatusCode());
+                    // response.getWriter().write("CD Not Found");
                 }
             } catch (SQLException e) {
                 // Handle database connection or deletion errors
@@ -145,4 +192,50 @@ public class CdController extends HttpServlet {
             response.getWriter().println("CD Code is required for delete");
         }
     }
+
+
+    private String BuscarPorGenero(ConnectionDb connection, String busqueda){
+        Cd cd = new Cd();
+        cd.setGenero(busqueda);
+        cd.selectCdByGenero(connection);
+
+        String jsonResponse = cd.toJson();
+        return jsonResponse;
+    }
+
+    private String BuscarPorTitulo(ConnectionDb connection, String busqueda){
+        Cd cd = new Cd();
+        cd.setTitulo(busqueda);
+        cd.selectCdByTitulo(connection);
+
+        String jsonResponse = cd.toJson();
+        return jsonResponse;
+    }
+
+    private String BuscarPorCodigo(ConnectionDb connection, String busqueda){
+        Cd cd = new Cd(busqueda);
+        cd.selectCd(connection);
+
+        String jsonResponse = cd.toJson();
+        return jsonResponse;
+    }
+
+    private String BuscarPorAutor(ConnectionDb connection, String busqueda){
+        Cd cd = new Cd();
+        cd.setAutor(busqueda);
+        cd.selectCdByAutor(connection);
+
+        String jsonResponse = cd.toJson();
+        return jsonResponse;
+    }
+
+    private String BuscarTodos(ConnectionDb connection){
+
+        Cd cdModel = new Cd();
+        List<Cd> cds = cdModel.selectAllCds(connection);
+        String jsonResponse = Cd.listToJson(cds);
+
+        return jsonResponse;
+    }
 }
+

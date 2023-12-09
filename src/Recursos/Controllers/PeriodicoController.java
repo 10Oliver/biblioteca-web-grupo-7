@@ -1,4 +1,4 @@
-package conf.sv.edu.udb.www.Recursos.Controllers;
+package sv.edu.udb.www.Recursos.Controllers;
 
 import java.io.IOException;
 import java.sql.Date;
@@ -11,42 +11,61 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.log4j.LogManager;
-import org.apache.log4j.Logger;
-
-import conf.sv.edu.udb.www.Recursos.Conexion.ConnectionDb;
-import conf.sv.edu.udb.www.Recursos.Models.RecursosFisicos.Periodico;
+import sv.edu.udb.www.Recursos.Conexion.ConnectionDb;
+import sv.edu.udb.www.Recursos.Models.StatusResponseIntern;
+import sv.edu.udb.www.Recursos.Models.RecursosFisicos.Periodico;
 
 @WebServlet("/PeriodicoController")
 public class PeriodicoController extends HttpServlet{
-    private static final Logger logger = LogManager.getLogger(PeriodicoController.class);
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         // Retrieve a specific Periodico by its code
-        String periodicoCode = request.getParameter("code");
+        String busqueda = request.getParameter("busqueda");
+        String action = request.getParameter("action");
 
         try (ConnectionDb connection = new ConnectionDb()) {
-            if (periodicoCode != null) {
-                // Logic to retrieve Periodico details from the database based on the code
-                Periodico periodico = new Periodico(periodicoCode);
-                periodico = periodico.selectPeriodico(connection);
+            String jsonResponse = null;
+            if(action != null){
 
-                // Set the Periodico details as an attribute and forward to the details JSP page
-                request.setAttribute("periodicoDetails", periodico);
-                request.getRequestDispatcher("/periodicoDetails.jsp").forward(request, response);
-            } else {
-                // Retrieve all Periodicos
-                Periodico periodicoModel = new Periodico();
-                List<Periodico> periodicos = periodicoModel.selectAllPeriodico(connection);
-
-                // You can use the list of Periodicos to display details or perform other actions
-                request.setAttribute("allPeriodicos", periodicos);
-                request.getRequestDispatcher("/allPeriodicos.jsp").forward(request, response);
+                switch (action) {
+                    case "codigo":
+                        jsonResponse = getByCode(connection, busqueda);
+                        response.setContentType("application/json");
+                        response.getWriter().write(jsonResponse);
+                        break;
+                    case "titulo":
+                        jsonResponse = getByTitulo(connection, busqueda);
+                        response.setContentType("application/json");
+                        response.getWriter().write(jsonResponse);
+                        break;
+                    case "lugarPublicacion":
+                        jsonResponse = getByLugarPublicacion(connection, busqueda);
+                        response.setContentType("application/json");
+                        response.getWriter().write(jsonResponse);
+                        break;
+                    case "nombrePeriodico":
+                        jsonResponse = getByNombrePeriodico(connection, busqueda);
+                        response.setContentType("application/json");
+                        response.getWriter().write(jsonResponse);
+                        break;
+                    default:
+                        jsonResponse = GetAll(connection);
+                        response.setContentType("application/json");
+                        response.getWriter().write(jsonResponse);
+                        break;
             }
+            }else{
+                jsonResponse = GetAll(connection);
+                        response.setContentType("application/json");
+                        response.getWriter().write(jsonResponse);
+            }
+
+            // response.setContentType("application/json");
+            // response.getWriter().write(jsonResponse);
         } catch (SQLException e) {
             // Log and handle the error
-            logger.error("Error retrieving Periodicos: " + e.getMessage());
+
             response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Error retrieving Periodicos");
         }
     }
@@ -58,11 +77,13 @@ Periodico newPeriodico = extractPeriodicoFromRequest(request);
 
 try (ConnectionDb connection = new ConnectionDb()) {
     newPeriodico.insertPeriodico(connection);
-    response.sendRedirect("/success.jsp");
+    StatusResponseIntern message = new StatusResponseIntern("Successfully Created",200);
+    String jsonResponse = message.StatusCode();
+    response.setContentType("application/json");
+    response.getWriter().write(jsonResponse);
 
 } catch (SQLException e) {
     // Log and handle the error
-    logger.error("Error inserting new Periodico: " + e.getMessage());
     response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Error inserting new Periodico");
 }
 }
@@ -75,23 +96,20 @@ protected void doPut(HttpServletRequest request, HttpServletResponse response)
             // Logic to update Periodico details in the database based on the code
 
             try (ConnectionDb connection = new ConnectionDb()) {
-                Periodico periodicoModel = new Periodico(periodicoCode);
-                Periodico existingPeriodico = periodicoModel.selectPeriodico(connection);
-                if (existingPeriodico != null) {
+                // Periodico periodicoModel = new Periodico(periodicoCode);
+                // Periodico existingPeriodico = periodicoModel.selectPeriodico(connection);
+                // if (existingPeriodico != null) {
                     // Update Periodico details based on request parameters
-                    existingPeriodico.setTitulo(request.getParameter("titulo"));
-                    existingPeriodico.setNombrePeriodico(request.getParameter("nombrePeriodico"));
-                    // ... (update other fields)
-
-                    // Update the Periodico in the database
-                    existingPeriodico.updatePeriodico(connection);
+                    Periodico newPeriodico = extractPeriodicoFromRequest(request);
+                    newPeriodico.setCodigoIdentificacion(periodicoCode);
+                    newPeriodico.updatePeriodico(connection);
                     response.getWriter().println("Periodico Updated Successfully");
-                } else {
+                // } else {
+                    // }
+                } catch (SQLException e) {
+                    // Handle database connection or update errors
+                    e.printStackTrace();
                     response.getWriter().println("Periodico Not Found");
-                }
-            } catch (SQLException e) {
-                // Handle database connection or update errors
-                e.printStackTrace();
             }
         } else {
             response.getWriter().println("Periodico Code is required for update");
@@ -106,15 +124,15 @@ if (periodicoCode != null) {
     // Logic to delete Periodico from the database based on the code
     try (ConnectionDb connection = new ConnectionDb()) {
         Periodico periodicoModel = new Periodico(periodicoCode);
-        Periodico existingPeriodico = periodicoModel.selectPeriodico(connection);
-        if (existingPeriodico != null) {
+        // Periodico existingPeriodico = periodicoModel.selectPeriodico(connection);
+        // if (existingPeriodico != null) {
             // Delete the Periodico from the database
-            existingPeriodico.deletePeriodico(connection);
+            periodicoModel.deletePeriodico(connection);
             response.getWriter().println("Periodico Deleted Successfully");
-        } else {
-            response.getWriter().println("Periodico Not Found");
-        }
-    } catch (SQLException e) {
+        // } else {
+            // }
+        } catch (SQLException e) {
+        response.getWriter().println("Periodico Not Found");
         // Handle database connection or deletion errors
         e.printStackTrace();
     }
@@ -137,4 +155,76 @@ if (periodicoCode != null) {
         // Create and return a new Periodico object
         return new Periodico(titulo, fechaPublicacion, stock, nombreEstante, numeroPaginas, nombrePeriodico, lugarPublicacion);
     }
+
+    private String getByCode(ConnectionDb connection, String periodicoCode) throws SQLException {
+        Periodico periodicoModel = new Periodico(periodicoCode);
+        Periodico periodico = periodicoModel.selectPeriodico(connection);
+
+        if (periodico != null) {
+            return periodico.toJson();
+        } else {
+            return "{\"error\": \"Periodico not found\"}";
+        }
+    }
+
+    private String getByTitulo(ConnectionDb connection, String titulo) throws SQLException {
+        Periodico periodicoModel = new Periodico();
+        periodicoModel.setTitulo(titulo);
+        Periodico periodico = periodicoModel.selectPeriodicoByTitulo(connection);
+
+        if (periodico != null) {
+            return periodico.toJson();
+        } else {
+            return "{\"error\": \"Periodico not found\"}";
+        }
+    }
+
+    private String getByLugarPublicacion(ConnectionDb connection, String lugarPublicacion) throws SQLException {
+        Periodico periodicoModel = new Periodico();
+        periodicoModel.setLugarPublicacion(lugarPublicacion);
+        Periodico periodico = periodicoModel.selectPeriodicoByLugarPublicacion(connection);
+
+        if (periodico != null) {
+            return periodico.toJson();
+        } else {
+            return "{\"error\": \"Periodico not found\"}";
+        }
+    }
+
+    private String getByNombrePeriodico(ConnectionDb connection, String nombrePeriodico) throws SQLException {
+        Periodico periodicoModel = new Periodico();
+        periodicoModel.setNombrePeriodico(nombrePeriodico);
+        Periodico periodico = periodicoModel.selectPeriodicoByNombrePeriodico(connection);
+
+        if (periodico != null) {
+            return periodico.toJson();
+        } else {
+            return "{\"error\": \"Periodico not found\"}";
+        }
+    }
+
+    // private String getAllPeriodicos(ConnectionDb connection) throws SQLException {
+    //     Periodico periodicoModel = new Periodico();
+    //     List<Periodico> periodicos = periodicoModel.selectAllPeriodico(connection);
+
+    //     if (!periodicos.isEmpty()) {
+    //         StringBuilder jsonArray = new StringBuilder("[");
+    //         for (Periodico periodico : periodicos) {
+    //             jsonArray.append(periodico.toJson()).append(",");
+    //         }
+    //         jsonArray.deleteCharAt(jsonArray.length() - 1); // Remove the trailing comma
+    //         jsonArray.append("]");
+    //         return jsonArray.toString();
+    //     } else {
+    //         return "{\"error\": \"No Periodicos found\"}";
+    //     }
+    // }
+
+    private String GetAll(ConnectionDb connection){
+    Periodico pr = new Periodico();
+    List<Periodico> prs = pr.selectAllPeriodico(connection);
+    String jsonResponse = Periodico.listPeriodicoToJson(prs);
+
+    return jsonResponse;
+}
 }

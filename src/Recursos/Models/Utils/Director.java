@@ -1,4 +1,4 @@
-package conf.sv.edu.udb.www.Recursos.Models.Utils;
+package sv.edu.udb.www.Recursos.Models.Utils;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -6,7 +6,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import conf.sv.edu.udb.www.Recursos.Conexion.ConnectionDb;
+import sv.edu.udb.www.Recursos.Conexion.ConnectionDb;
 
 public class Director {
     private int id;
