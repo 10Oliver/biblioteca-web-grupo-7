@@ -4,6 +4,7 @@
  * and open the template in the editor.
  */
 package navegabilidad;
+import Recursos.Models.Utils.Usuario;
 import java.io.IOException;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -11,6 +12,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import Recursos.Conexion.ConnectionDb;
 
 import java.util.List;
 import java.util.ArrayList;
@@ -23,8 +25,10 @@ import java.util.HashMap;
  */
 @WebServlet(name = "panelControlador", urlPatterns = {"/panel.do"})
 public class panelPrincipalControlador extends HttpServlet {
+    ConnectionDb connection = new ConnectionDb();
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
+        
         
         try {
             String vista = request.getParameter("vista");
@@ -56,22 +60,11 @@ public class panelPrincipalControlador extends HttpServlet {
         } catch(Exception e) {
         }
     }
-    private List<Map<String, String>> generarUsuarios() {
-        // Crear la lista de mapas
-        List<Map<String, String>> lista = new ArrayList<>();
-
-        // Crear los mapas y añadirlos a la lista
-        for (int i = 0; i < 5; i++) {
-            Map<String, String> mapa = new HashMap<>();
-            mapa.put("id", "ID" + i);
-            mapa.put("usuario", "Usuario" + i);
-            mapa.put("correo", "Correo" + i);
-            mapa.put("fecha", "Fecha" + i);
-            mapa.put("telefono", "Teléfono" + i);
-            mapa.put("rol", "Rol" + i);
-            lista.add(mapa);
-        }
-        return lista;
+    private List<Usuario> generarUsuarios() {
+        List<Usuario> usuarios;
+        Usuario usuario = new Usuario();
+        usuarios = usuario.selectAllUsuarios(connection);
+        return usuarios;
     }
 }
 
