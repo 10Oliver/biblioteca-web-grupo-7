@@ -4,6 +4,10 @@
     Author     : Oliver
 --%>
 
+<%
+    Integer
+%>
+
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
@@ -26,10 +30,10 @@
                 </div>
                 <div class="col-span-2 row-start-2 row-end-3 m-4 flex flex-col items-center justify-center rounded-lg bg-emerald-100 px-5">
                     <p class="mb-2">Seleccionar el rol al que deseas modificar.</p>
-                    <select name="" id="" class="w-60 rounded-lg px-3 py-2">
-                        <option value="">Administrador</option>
-                        <option value="">Profesor</option>
-                        <option value="">Estudiante</option>
+                    <select name="tipoUsuarios" id="tipoUsuarios" class="w-60 rounded-lg px-3 py-2">
+                        <option value="1">Administrador</option>
+                        <option value="2">Profesor</option>
+                        <option value="3">Estudiante</option>
                     </select>
                 </div>
 
@@ -48,3 +52,15 @@
         </form>
     </body>
 </html>
+
+<script>
+    const guardarConfiguraciones = async (e) => {
+        const datos = new FormData(document.getElementById("libroForm"));
+        const urlParams = new URLSearchParams(datos);
+        const userTypeId = document.getElementById("tipoUsuarios").value;
+        const response = await fetch('${contextPath}/configuraciones?user=' + userTypeId + "?" + urlParams, {
+            method: 'POST'
+        })
+        alert("El libro se ha registrado con éxito")
+    }
+</script>

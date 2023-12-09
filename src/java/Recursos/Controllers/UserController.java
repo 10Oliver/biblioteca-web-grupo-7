@@ -10,8 +10,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import conf.sv.edu.udb.www.Recursos.Conexion.ConnectionDb;
-import conf.sv.edu.udb.www.Recursos.Models.Utils.Usuario;
+import Recursos.Conexion.ConnectionDb;
+import Recursos.Models.Utils.Usuario;
 
 @WebServlet("/UserController")
 public class UserController extends HttpServlet {

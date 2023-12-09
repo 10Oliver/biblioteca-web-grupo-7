@@ -14,13 +14,11 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
-import conf.sv.edu.udb.www.Recursos.Conexion.ConnectionDb;
-import conf.sv.edu.udb.www.Recursos.Models.RecursosFisicos.Libro;
-
+import Recursos.Conexion.ConnectionDb;
+import Recursos.Models.RecursosFisicos.Libro;
 @WebServlet("/LibroController")
-public class LibroController extends HttpServlet {
-
-    private static final Logger logger = LogManager.getLogger(LibroController.class);
+public class LibroController extends HttpServlet{
+    //private static final Logger logger = LogManager.getLogger(LibroController.class);
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -39,13 +37,14 @@ public class LibroController extends HttpServlet {
                 request.getRequestDispatcher("/allLibros.jsp").forward(request, response);
             }
         } catch (SQLException e) {
-            logger.error("Error retrieving libros: " + e.getMessage());
+            //logger.error("Error retrieving libros: " + e.getMessage());
             response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Error retrieving libros");
         }
     }
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+            System.out.print("¿Holis?");
         try (ConnectionDb connection = new ConnectionDb()) {
             Libro newLibro = extractLibroFromRequest(request);
 
@@ -57,7 +56,7 @@ public class LibroController extends HttpServlet {
             response.getWriter().write(String.valueOf(true));
         } catch (SQLException e) {
             // Log and handle the error
-            logger.error("Error inserting new Libro: " + e.getMessage());
+            //logger.error("Error inserting new Libro: " + e.getMessage());
             response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Error inserting new Libro");
         }
     }
@@ -119,6 +118,8 @@ public class LibroController extends HttpServlet {
         String autor = request.getParameter("autor");
         String editorial = request.getParameter("editorial");
         String numeroPaginasStr = request.getParameter("numeroPaginas");
+        System.out.println("-----------------------------------");
+        System.out.println(numeroPaginasStr);
         int numeroPaginas = Integer.parseInt(numeroPaginasStr);
         int isbn = Integer.parseInt(request.getParameter("isbn"));
         String edicion = request.getParameter("edicion");

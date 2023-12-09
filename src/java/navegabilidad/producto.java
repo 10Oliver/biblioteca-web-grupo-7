@@ -8,6 +8,15 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import Recursos.Models.Utils.Autor;
+import Recursos.Conexion.ConnectionDb;
+import Recursos.Models.Utils.Editorial;
+import Recursos.Models.Utils.Estante;
+import Recursos.Models.Utils.Genero;
+import Recursos.Models.Utils.Idioma;
+import java.util.ArrayList;
+import java.util.List;
+
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -22,16 +31,36 @@ public class producto extends HttpServlet {
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
+        Autor autor = new Autor();
+        Editorial editorial = new Editorial();
+        Idioma idioma = new Idioma();
+        Genero genero = new Genero();
+        Estante estante = new Estante();
+        List<Autor> autores;
+        List<Idioma> idiomas;
+        List<Genero> generos;
+        List<Editorial> editoriales;
+        List<Estante> estantes;
+        ConnectionDb connection = new ConnectionDb();
         try {
             String producto = request.getParameter("tipo");
-            System.out.print("------------------------");
-            System.out.print(producto);
             switch (producto) {
                 case "libro":
                     request.setAttribute("vistaSeleccionada", 2);
                     // Se colocan los datos del usuario
                     request.setAttribute("vistaInventario", 2);
                     request.setAttribute("producto", 1);
+                    // Cargamos los autores
+                    autores = autor.selectAllAutors(connection);
+                    editoriales = editorial.selectAllEditorials(connection);
+                    idiomas = idioma.selectAllIdiomas(connection);
+                    generos = genero.selectAllGeneros(connection);
+                    estantes = estante.selectAllEstantes(connection);
+                    request.setAttribute("listaAutores", autores);
+                    request.setAttribute("listaEditoriales", editoriales);
+                    request.setAttribute("listaIdiomas", idiomas);
+                    request.setAttribute("listaGeneros", generos);
+                    request.setAttribute("listaEstantes", estantes);
                     break;
                 case "e-book":
                     request.setAttribute("vistaSeleccionada", 2);

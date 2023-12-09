@@ -4,6 +4,15 @@
     Author     : Oliver
 --%>
 
+<%@page import="java.util.List"%>
+<%@page import="Recursos.Models.Utils.*"%>
+<%
+    List<Autor> listaAutores = (List<Autor>) request.getAttribute("listaAutores");
+    List<Editorial> listaEditoriales = (List<Editorial>) request.getAttribute("listaEditoriales");
+    List<Genero> listaGeneros = (List<Genero>) request.getAttribute("listaGeneros");
+    List<Idioma> listaIdiomas = (List<Idioma>) request.getAttribute("listaIdiomas");
+    List<Estante> listaEstantes = (List<Estante>) request.getAttribute("listaEstantes");
+%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
@@ -12,7 +21,7 @@
         <title>JSP Page</title>
     </head>
     <body>
-        <form action="${contextPath}/LibroController" method="post">
+        <form action="" id='libroForm' method="post">
             <div class="mt-2 grid grid-cols-2 grid-rows-6 px-5">
                 <div class="col-start-1 row-start-1 m-2 flex flex-col">
                     <label for="titulo">Titulo</label>
@@ -22,12 +31,18 @@
                     <label for="autor">Autor</label>
                     <select name="autor" id="autor" class="bg-slate-200 py-2 px-3 rounded-lg">
                         <option value="" disabled selected>Selecionar</option>
+                        <%for (Autor item: listaAutores) {%>
+                        <option value="<%=item.getId()%>"><%=item.getAutor()%></option>
+                        <%}%>
                     </select>
                 </div>
                 <div class="col-start-1 row-start-2 m-2 flex flex-col">
                     <label for="editorial">Editorial</label>
                     <select name="editorial" id="editorial" class="bg-slate-200 py-2 px-3 rounded-lg">
                         <option value="" disabled selected>Selecionar</option>
+                        <% for (Editorial item: listaEditoriales) {%>
+                        <option value="<%=item.getId()%>"><%=item.getEditorial()%></option>
+                        <%}%>
                     </select>
                 </div>
                 <div class="col-start-2 row-start-2 m-2 flex flex-col">
@@ -54,12 +69,18 @@
                     <label for="genero">Genero</label>
                     <select name="genero" id="genero" class="bg-slate-200 py-2 px-3 rounded-lg">
                         <option value="" disabled selected>Selecionar</option>
+                        <% for (Genero item: listaGeneros) {%>
+                        <option value="<%=item.getId()%>"><%=item.getGenero()%></option>
+                        <%}%>
                     </select>
                 </div>
                 <div class="col-start-2 row-start-5 m-2 flex flex-col">
                     <label for="idioma">Idioma</label>
                     <select name="idioma" id="idioma" class="bg-slate-200 py-2 px-3 rounded-lg">
                         <option value="" disabled selected>Selecionar</option>
+                        <% for (Idioma item: listaIdiomas) {%>
+                        <option value="<%=item.getId()%>"><%=item.getIdioma()%></option>
+                        <%}%>
                     </select>
                 </div>
                 <div class="col-start-1 row-start-6 m-2 flex flex-col">
@@ -71,15 +92,30 @@
                     <input type="number" name="stock" id="stock" class="bg-slate-200 py-2 px-3 rounded-lg" value="0"/>
                 </div>
                 <div class="col-start-1 row-start-7 m-2 flex flex-col">
-                    <label for="estante">Estante</label>
-                    <select name="estante" id="estante" class="bg-slate-200 py-2 px-3 rounded-lg">
+                    <label for="nombreEstante">Estante</label>
+                    <select name="nombreEstante" id="nombreEstante" class="bg-slate-200 py-2 px-3 rounded-lg">
                         <option value="" disabled selected>Selecionar</option>
+                        <% for (Estante item: listaEstantes) {%>
+                        <option value="<%=item.getId()%>"><%=item.getNombreEstante()%></option>
+                        <%}%>
                     </select>
                 </div>
                 <div class="col-span-2 row-start-8 m-2 py-3 flex flex-col justify-center items-center">
-                    <button type="submit" class="py-2 px-2 bg-indigo-300 w-52 rounded-lg">Crear libro</button>
+                    <a onClick='guardarLibro()' class="py-2 px-2 bg-indigo-300 w-52 rounded-lg">Crear libro</a>
                 </div>
             </div>
         </form>
     </body>
 </html>
+
+<script>
+    
+    const guardarLibro = async (e) => {
+        const datos = new FormData(document.getElementById("libroForm"));
+        const urlParams = new URLSearchParams(datos);
+        const response = await fetch('${contextPath}/LibroController?' + urlParams, {
+            method: 'POST'
+        })
+        alert("El libro se ha registrado con éxito")
+    }
+</script>

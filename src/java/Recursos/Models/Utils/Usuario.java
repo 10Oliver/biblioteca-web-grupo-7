@@ -1,4 +1,4 @@
-package conf.sv.edu.udb.www.Recursos.Models.Utils;
+package Recursos.Models.Utils;
 
 import java.sql.Date;
 import java.sql.PreparedStatement;
@@ -7,7 +7,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import conf.sv.edu.udb.www.Recursos.Conexion.ConnectionDb;
+import Recursos.Conexion.ConnectionDb;
 public class Usuario {
 private int id;
     private String nombreUsuario;

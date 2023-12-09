@@ -1,4 +1,4 @@
-package conf.sv.edu.udb.www.Recursos.Models.Utils;
+package Recursos.Models.Utils;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -7,10 +7,12 @@ import java.text.SimpleDateFormat;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
-import conf.sv.edu.udb.www.Recursos.Conexion.ConnectionDb;
+import Recursos.Conexion.ConnectionDb;
 
 public class Prestamo {
 private int id;
@@ -429,6 +431,36 @@ String update_revistas_stock = "UPDATE Revistas SET Stock = Stock + ? WHERE Codi
             e.printStackTrace();
         }
         return prestamos;
+    }
+
+    public String toJson() {
+        Map<String, Object> jsonMap = new HashMap<>();
+        jsonMap.put("id", getId());
+        jsonMap.put("idUsuario", getIdUsuario());
+        jsonMap.put("fechaPrestamo", getFechaPrestamo());
+        jsonMap.put("fechaDevolucion", getFechaDevolucion());
+        jsonMap.put("fechaDevolucionReal", getFechaDevolucionReal());
+        jsonMap.put("mora", getMora());
+        jsonMap.put("codigoEjemplar", getCodigoEjemplar());
+        jsonMap.put("codigoPrestamo", getCodigoPrestamo());
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        String formattedFechaPrestamo = dateFormat.format(getFechaPrestamo());
+        String formattedFechaDevolucion = dateFormat.format(getFechaDevolucion());
+        String formattedFechaDevolucionReal = dateFormat.format(getFechaDevolucionReal());
+
+        jsonMap.put("formattedFechaPrestamo", formattedFechaPrestamo);
+        jsonMap.put("formattedFechaDevolucion", formattedFechaDevolucion);
+        jsonMap.put("formattedFechaDevolucionReal", formattedFechaDevolucionReal);
+
+        StringBuilder jsonString = new StringBuilder("{");
+        for (Map.Entry<String, Object> entry : jsonMap.entrySet()) {
+            jsonString.append("\"").append(entry.getKey()).append("\":\"").append(entry.getValue()).append("\",");
+        }
+        jsonString.deleteCharAt(jsonString.length() - 1); // Remove the trailing comma
+        jsonString.append("}");
+
+        return jsonString.toString();
     }
 
 }

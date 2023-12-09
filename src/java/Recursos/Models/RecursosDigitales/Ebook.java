@@ -1,4 +1,4 @@
-package conf.sv.edu.udb.www.Recursos.Models.RecursosDigitales;
+package Recursos.Models.RecursosDigitales;
 
 
 import java.sql.Date;
@@ -8,8 +8,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import conf.sv.edu.udb.www.Recursos.Conexion.ConnectionDb;
-import conf.sv.edu.udb.www.Recursos.Models.RecursoDigital;
+import Recursos.Conexion.ConnectionDb;
+import Recursos.Models.RecursoDigital;
 
 public class Ebook extends RecursoDigital {
     private String autor;

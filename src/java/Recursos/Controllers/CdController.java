@@ -14,8 +14,8 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
-import conf.sv.edu.udb.www.Recursos.Conexion.ConnectionDb;
-import conf.sv.edu.udb.www.Recursos.Models.RecursosDigitales.Cd;
+import Recursos.Conexion.ConnectionDb;
+import Recursos.Models.RecursosDigitales.Cd;
 
 @WebServlet("/cdController")
 public class CdController extends HttpServlet {
