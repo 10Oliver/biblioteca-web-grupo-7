@@ -16,11 +16,13 @@ import org.apache.log4j.Logger;
 
 import conf.sv.edu.udb.www.Recursos.Conexion.ConnectionDb;
 import conf.sv.edu.udb.www.Recursos.Models.RecursosFisicos.Libro;
+
 @WebServlet("/LibroController")
-public class LibroController extends HttpServlet{
+public class LibroController extends HttpServlet {
+
     private static final Logger logger = LogManager.getLogger(LibroController.class);
 
-     protected void doGet(HttpServletRequest request, HttpServletResponse response)
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String libroCode = request.getParameter("code");
 
@@ -41,6 +43,7 @@ public class LibroController extends HttpServlet{
             response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Error retrieving libros");
         }
     }
+
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         try (ConnectionDb connection = new ConnectionDb()) {
@@ -48,9 +51,10 @@ public class LibroController extends HttpServlet{
 
             // Insert the new Libro into the database
             newLibro.insertLibro(connection);
-
+            response.setContentType("text/plain");
+            response.setCharacterEncoding("UTF-8");
             // Redirect or forward to another page as needed
-            response.sendRedirect("/success.jsp");
+            response.getWriter().write(String.valueOf(true));
         } catch (SQLException e) {
             // Log and handle the error
             logger.error("Error inserting new Libro: " + e.getMessage());
@@ -108,11 +112,6 @@ public class LibroController extends HttpServlet{
             response.getWriter().println("Libro Code is required for delete");
         }
     }
-
-
-
-
-
 
     private Libro extractLibroFromRequest(HttpServletRequest request) {
         // Extract and set Libro details from request parameters

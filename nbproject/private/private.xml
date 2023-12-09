@@ -3,14 +3,8 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/D:/Documentos/NetBeansProjects/biblioteca_web/web/privada/componentes/eBook.jsp</file>
-            <file>file:/D:/Documentos/NetBeansProjects/biblioteca_web/web/privada/vistas/inventario.jsp</file>
-            <file>file:/D:/Documentos/NetBeansProjects/biblioteca_web/src/java/Recursos/Conexion/ConnectionDb.java</file>
-            <file>file:/D:/Documentos/NetBeansProjects/biblioteca_web/src/java/navegabilidad/producto.java</file>
-            <file>file:/D:/Documentos/NetBeansProjects/biblioteca_web/web/privada/vistas/configuraciones.jsp</file>
-            <file>file:/D:/Documentos/NetBeansProjects/biblioteca_web/src/java/navegabilidad/panelPrincipalControlador.java</file>
-            <file>file:/D:/Documentos/NetBeansProjects/biblioteca_web/web/privada/panelPrincipal.jsp</file>
-            <file>file:/D:/Documentos/NetBeansProjects/biblioteca_web/src/java/navegabilidad/buscar.java</file>
+            <file>file:/D:/Documentos/NetBeansProjects/biblioteca_web/web/privada/componentes/libro.jsp</file>
+            <file>file:/D:/Documentos/NetBeansProjects/biblioteca_web/src/java/Recursos/Controllers/LibroController.java</file>
         </group>
     </open-files>
 </project-private>

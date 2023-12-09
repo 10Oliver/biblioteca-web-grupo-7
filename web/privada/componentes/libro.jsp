@@ -12,7 +12,7 @@
         <title>JSP Page</title>
     </head>
     <body>
-        <form action="" method="post">
+        <form action="${contextPath}/LibroController" method="post">
             <div class="mt-2 grid grid-cols-2 grid-rows-6 px-5">
                 <div class="col-start-1 row-start-1 m-2 flex flex-col">
                     <label for="titulo">Titulo</label>
