@@ -23,6 +23,10 @@ public class Cd extends RecursoDigital {
     private String DELETE_STATEMENT = "DELETE FROM Cds WHERE CodigoIdentificacion = ?;";
     private String SELECT_SINGLE_STATEMENT = "SELECT Cds.id, Cds.CodigoIdentificacion, Cds.Titulo, Cds.NumCanciones, Cds.FechaPublicacion, Cds.Stock, Estantes.NombreEstante, Autores.NombreAutor, Generos.NombreGenero FROM Cds LEFT JOIN Estantes ON Cds.idEstante = Estantes.id LEFT JOIN Autores ON Cds.idAutor = Autores.id LEFT JOIN Generos ON Cds.idGenero = Generos.id WHERE Cds.CodigoIdentificacion = ?";
     private String SELECT_ALL_STATEMENT = "SELECT Cds.id, Cds.CodigoIdentificacion, Cds.Titulo, Cds.NumCanciones, Cds.FechaPublicacion, Cds.Stock, Estantes.NombreEstante, Autores.NombreAutor, Generos.NombreGenero FROM Cds LEFT JOIN Estantes ON Cds.idEstante = Estantes.id LEFT JOIN Autores ON Cds.idAutor = Autores.id LEFT JOIN Generos ON Cds.idGenero = Generos.id";
+    private String SELECT_ALL_BY_AUTOR = "SELECT Cds.id, Cds.CodigoIdentificacion, Cds.Titulo, Cds.NumCanciones, Cds.FechaPublicacion, Cds.Stock, Estantes.NombreEstante, Autores.NombreAutor, Generos.NombreGenero FROM Cds LEFT JOIN Estantes ON Cds.idEstante = Estantes.id LEFT JOIN Autores ON Cds.idAutor = Autores.id LEFT JOIN Generos ON Cds.idGenero = Generos.id LIKE Autores.NombreAutor = ?";
+    private String SELECT_ALL_BY_Genero = "SELECT Cds.id, Cds.CodigoIdentificacion, Cds.Titulo, Cds.NumCanciones, Cds.FechaPublicacion, Cds.Stock, Estantes.NombreEstante, Autores.NombreAutor, Generos.NombreGenero FROM Cds LEFT JOIN Estantes ON Cds.idEstante = Estantes.id LEFT JOIN Autores ON Cds.idAutor = Autores.id LEFT JOIN Generos ON Cds.idGenero = Generos.id LIKE Generos.NombreAutor = ?";
+    private String SELECT_ALL_BY_TITULO = "SELECT Cds.id, Cds.CodigoIdentificacion, Cds.Titulo, Cds.NumCanciones, Cds.FechaPublicacion, Cds.Stock, Estantes.NombreEstante, Autores.NombreAutor, Generos.NombreGenero FROM Cds LEFT JOIN Estantes ON Cds.idEstante = Estantes.id LEFT JOIN Autores ON Cds.idAutor = Autores.id LEFT JOIN Generos ON Cds.idGenero = Generos.id LIKE Cds.Titulo = ?";
+
 
     public Cd(int id, String codigoIdentificacion, String titulo, Date fechaPublicacion, int stock, String nombreEstante, String genero, String autor, String numCanciones) {
         super(id, codigoIdentificacion, titulo, fechaPublicacion, stock, nombreEstante, genero);
@@ -225,69 +229,64 @@ public static String listToJson(List<Cd> cdList) {
     return jsonListString.toString();
 }
 
-public Cd selectCdByAutor(ConnectionDb connection) {
-    Cd cd = null;
+public List<Cd> selectCdByAutor(ConnectionDb connection) {
+    List<Cd> cds = new ArrayList<>();
     try {
-        PreparedStatement statement = connection.getConnection().prepareStatement(SELECT_SINGLE_STATEMENT);
+        PreparedStatement statement = connection.getConnection().prepareStatement(SELECT_ALL_BY_AUTOR);
         statement.setString(1, getAutor());
         ResultSet resultSet = statement.executeQuery();
 
-        if (resultSet.next()) {
+         while (resultSet.next()) {
             // Map ResultSet to Cd
-            cd = mapResultSetToCdWithEstante(resultSet);
-        } else {
-            System.out.println("No Cd found with the provided ID.");
+            Cd cd = mapResultSetToCdWithEstante(resultSet);
+            cds.add(cd);
         }
 
     } catch (SQLException e) {
         System.out.println("Error occurred while selecting the Cd: " + e.getMessage());
         e.printStackTrace();
     }
-    return cd;
+    return cds;
 }
 
-public Cd selectCdByTitulo(ConnectionDb connection) {
-    Cd cd = null;
+public List<Cd> selectCdByTitulo(ConnectionDb connection) {
+    List<Cd> cds = new ArrayList<>();
     try {
-        PreparedStatement statement = connection.getConnection().prepareStatement(SELECT_SINGLE_STATEMENT);
+        PreparedStatement statement = connection.getConnection().prepareStatement(SELECT_ALL_BY_TITULO);
         statement.setString(1, getTitulo());
         ResultSet resultSet = statement.executeQuery();
 
-        if (resultSet.next()) {
+         while (resultSet.next()) {
             // Map ResultSet to Cd
-            cd = mapResultSetToCdWithEstante(resultSet);
-        } else {
-            System.out.println("No Cd found with the provided ID.");
+            Cd cd = mapResultSetToCdWithEstante(resultSet);
+            cds.add(cd);
         }
 
     } catch (SQLException e) {
         System.out.println("Error occurred while selecting the Cd: " + e.getMessage());
         e.printStackTrace();
     }
-    return cd;
+    return cds;
 }
 
-public Cd selectCdByGenero(ConnectionDb connection) {
-    Cd cd = null;
+public List<Cd> selectCdByGenero(ConnectionDb connection) {
+List<Cd> cds = new ArrayList<>();
     try {
-        PreparedStatement statement = connection.getConnection().prepareStatement(SELECT_SINGLE_STATEMENT);
+        PreparedStatement statement = connection.getConnection().prepareStatement(SELECT_ALL_BY_Genero);
         statement.setString(1, getGenero());
         ResultSet resultSet = statement.executeQuery();
 
-        if (resultSet.next()) {
+         while (resultSet.next()) {
             // Map ResultSet to Cd
-            cd = mapResultSetToCdWithEstante(resultSet);
-        } else {
-            System.out.println("No Cd found with the provided ID.");
+            Cd cd = mapResultSetToCdWithEstante(resultSet);
+            cds.add(cd);
         }
 
     } catch (SQLException e) {
         System.out.println("Error occurred while selecting the Cd: " + e.getMessage());
         e.printStackTrace();
     }
-    return cd;
+    return cds;
 }
-
-
 
 }
