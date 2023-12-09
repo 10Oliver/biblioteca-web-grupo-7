@@ -33,7 +33,7 @@
         a.btn-volver {
             display: inline-block;
             padding: 10px 20px;
-            background-color: #2c3e50; /* Cambiado a un tono más oscuro de azul */
+            background-color: #2c3e50; 
             color: #fff;
             text-decoration: none;
             border-radius: 5px;
@@ -41,7 +41,7 @@
         }
 
         a.btn-volver:hover {
-            background-color: #34495e; /* Cambiado a un tono más oscuro al hacer hover */
+            background-color: #34495e; 
         }
 
         .content {
