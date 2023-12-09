@@ -12,6 +12,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 /**
  *
@@ -57,11 +58,14 @@ public class SindexKev extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         
+        
         String nombre = request.getParameter("txtnombre");
         String autor = request.getParameter("txtautor");
         
-        System.out.println(nombre);
-        System.out.println(autor);
+      
+   
+        response.sendRedirect("mostrarTabla.jsp");
+        
     }
 
     

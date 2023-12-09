@@ -70,7 +70,7 @@
     <!-- Formulario de búsqueda -->
     <div class="form-container">
         <p id="mensajeTextoBuscar" style="margin-bottom: 0;">Ingrese el texto a buscar:</p> <!-- Ajustado el margen inferior -->
-        <form action="panelPrincipalControlador" method="POST">
+        <form action="SindexKev" method="POST">
             <label for="nombre">Nombre:</label>
             <input type="text" id="nombre" name="txtnombre" required>
             <br>
@@ -91,7 +91,6 @@
         System.out.println(fautor);
     %>
             
-    <%-- kevv >
     
 </body>
 </html>
