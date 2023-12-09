@@ -1,6 +1,5 @@
 package navegabilidad;
 
-
 import java.io.IOException;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -18,28 +17,51 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author Oliver
  */
-@WebServlet(name = "registrarControlador", urlPatterns = {"/registarProducto.do"})
+@WebServlet(name = "productoControlador", urlPatterns = {"/producto.do"})
 public class producto extends HttpServlet {
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         try {
-            String producto = request.getParameter("producto");
-
+            String producto = request.getParameter("tipo");
+            System.out.print("------------------------");
+            System.out.print(producto);
             switch (producto) {
-                case "usuario":
-                    request.setAttribute("vistaSeleccionada", 1);
-                    // Se colocan los datos del usuario
-                    request.setAttribute("usuarios", "");
-                    break;
-                case "inventario":
+                case "libro":
                     request.setAttribute("vistaSeleccionada", 2);
+                    // Se colocan los datos del usuario
+                    request.setAttribute("vistaInventario", 2);
+                    request.setAttribute("producto", 1);
                     break;
-                case "prestamo":
-                    request.setAttribute("vistaSeleccionada", 3);
+                case "e-book":
+                    request.setAttribute("vistaSeleccionada", 2);
+                    request.setAttribute("vistaInventario", 2);
+                    request.setAttribute("producto", 2);
                     break;
-                case "configuracion":
-                    request.setAttribute("vistaSeleccionada", 4);
+                case "periodico":
+                    request.setAttribute("vistaSeleccionada", 2);
+                    request.setAttribute("vistaInventario", 2);
+                    request.setAttribute("producto", 3);
+                    break;
+                case "tesis":
+                    request.setAttribute("vistaSeleccionada", 2);
+                    request.setAttribute("vistaInventario", 2);
+                    request.setAttribute("producto", 4);
+                    break;
+                case "pelicula":
+                    request.setAttribute("vistaSeleccionada", 2);
+                    request.setAttribute("vistaInventario", 2);
+                    request.setAttribute("producto", 5);
+                    break;
+                case "cd":
+                    request.setAttribute("vistaSeleccionada", 2);
+                    request.setAttribute("vistaInventario", 2);
+                    request.setAttribute("producto", 6);
+                    break;
+                case "revista":
+                    request.setAttribute("vistaSeleccionada", 2);
+                    request.setAttribute("vistaInventario", 2);
+                    request.setAttribute("producto", 7);
                     break;
                 default:
                     System.out.println(producto);

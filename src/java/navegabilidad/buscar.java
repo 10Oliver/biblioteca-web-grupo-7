@@ -17,7 +17,7 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author Oliver
  */
-@WebServlet(name = "registrarControlador", urlPatterns = {"/registarProducto.do"})
+@WebServlet(name = "registrarControlador", urlPatterns = {"/buscar.do"})
 public class buscar extends HttpServlet {
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
