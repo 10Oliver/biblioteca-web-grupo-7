@@ -1,4 +1,4 @@
-package conf.sv.edu.udb.www.Recursos.Controllers;
+package Recursos.Controllers;
 
 import java.io.IOException;
 import java.util.List;
