@@ -74,24 +74,24 @@
                     <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" aria-hidden="true"></div>
                     <!-- Ajustamos el tamaño de este div -->
                     <div class="h-auto w-4/6 transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:align-middle">
-                        <form action="" method="post">
+                        <form action="${contextPath}/UserController?action=register" method="post">
                             <div class="bg-white px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
                                 <h3 class="text-lg font-medium leading-6 text-gray-900">Agregar un nuevo usuario</h3>
                                 <div class="mt-8 flex flex-wrap">
                                     <div class="my-1 w-1/2 px-3 py-1">
-                                        <input type="text" class="m-0 w-full rounded-lg bg-slate-200 px-2 py-2" name="" id="" placeholder="Escribe el nombre de usuario..." />
+                                        <input type="text" class="m-0 w-full rounded-lg bg-slate-200 px-2 py-2" name="usuario" id="usuario" placeholder="Escribe el nombre de usuario..." />
                                     </div>
                                     <div class="my-1 w-1/2 px-3 py-1">
-                                        <input type="email" class="m-0 w-full rounded-lg bg-slate-200 px-2 py-2" name="" id="" placeholder="Escribe el correo del usuario..." />
+                                        <input type="email" class="m-0 w-full rounded-lg bg-slate-200 px-2 py-2" name="correo" id="correo" placeholder="Escribe el correo del usuario..." />
                                     </div>
                                     <div class="my-1 w-1/2 px-3 py-1">
                                         <input type="date" class="m-0 w-full rounded-lg bg-slate-200 px-2 py-2" name="" id="" placeholder="Escribe la fecha de nacimiento..." />
                                     </div>
                                     <div class="my-1 w-1/2 px-3 py-1">
-                                        <input type="tel" class="m-0 w-full rounded-lg bg-slate-200 px-2 py-2" name="" id="" placeholder="Escribe el teléfono..." />
+                                        <input type="tel" class="m-0 w-full rounded-lg bg-slate-200 px-2 py-2" name="telefono" id="telefono" placeholder="Escribe el teléfono..." />
                                     </div>
                                     <div class="my-1 w-1/2 px-3 py-1">
-                                        <select name="" class="m-0 w-full rounded-lg bg-slate-200 px-2 py-2" id="">
+                                        <select name="rol" class="m-0 w-full rounded-lg bg-slate-200 px-2 py-2" id="rol">
                                             <option value="" selected disabled>Seleccione el rol</option>
                                             <option value="">Administrador</option>
                                             <option value="">Maestro</option>
@@ -122,15 +122,15 @@
                     <div class="h-auto w-4/6 transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:align-middle">
                         <div class="bg-white px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
                             <h3 class="text-lg font-medium leading-6 text-gray-900">Restablecer contraseña</h3>
-                            <form action="" method="post">
+                            <form action="${contextPath}/UserController?action=changePassword" method="post">
                                 <div class="mb-8 mt-8 flex flex-wrap">
                                     <!-- Input para colocar el ID y enviarlo en el post-->
-                                    <input type="text" id="idRestablecer" name="id" class="hidden"/>
+                                    <input type="text" id="userId" name="userId" class="hidden"/>
                                     <div class="my-1 w-1/2 px-3 py-1">
-                                        <input type="password" class="m-0 w-full rounded-lg bg-slate-200 px-2 py-2" name="" id="" placeholder="Escribe la nueva contraseña..." />
+                                        <input type="password" class="m-0 w-full rounded-lg bg-slate-200 px-2 py-2" name="newPassword" id="newPassword" placeholder="Escribe la nueva contraseña..." />
                                     </div>
                                     <div class="py-1p-1 my-1 w-1/2 px-3">
-                                        <input type="password" class="m-0 w-full rounded-lg bg-slate-200 px-2 py-2" name="" id="" placeholder="Confirma la nueva contraseña..." />
+                                        <input type="password" class="m-0 w-full rounded-lg bg-slate-200 px-2 py-2" id="confirmPassword" placeholder="Confirma la nueva contraseña..." />
                                     </div>
                                 </div>
                                 <div class="px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
@@ -150,6 +150,7 @@
     const agregarModal = document.getElementById("agregarUsuarios");
     const agregarAbrirBoton = document.getElementById("btnAgregar");
     const agregarCerrarBoton = document.getElementById("cerrarModal");
+    const idUsuarioSelecionado = document.getElementById("userId");
 
     const restablecerModal = document.getElementById("restablecerModal");
     const restablecerCerrarBoton = document.getElementById("cerrarRestablecer");
@@ -162,11 +163,13 @@
         agregarModal.style.display = "none";
     }
 
-    const abrirRestableceModal = (idusuario) => {
+    const abrirRestableceModal = (idUsuario) => {
         restablecerModal.style.display = "block";
+        idUsuarioSeleccionado.value = idUsuario;
     }
 
     restablecerCerrarBoton.onclick = () => {
         restablecerModal.style.display = "none";
+        idUsuarioSeleccionado.value = "";
     }
 </script>

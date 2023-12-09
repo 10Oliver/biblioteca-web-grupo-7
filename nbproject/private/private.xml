@@ -3,9 +3,13 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/HP%20Ryzen%207/Documents/U/U/u2/POO/biblioteca-web-grupo-7/web/publica/vista/DVDS.jsp</file>
-            <file>file:/C:/Users/HP%20Ryzen%207/Documents/U/U/u2/POO/biblioteca-web-grupo-7/web/publica/vista/CDS.jsp</file>
-            <file>file:/C:/Users/HP%20Ryzen%207/Documents/U/U/u2/POO/biblioteca-web-grupo-7/web/index.jsp</file>
+            <file>file:/C:/Users/Oliver-Dev/proyects/biblioteca-web-grupo-7/src/java/navegabilidad/producto.java</file>
+            <file>file:/C:/Users/Oliver-Dev/proyects/biblioteca-web-grupo-7/src/java/Recursos/Models/Utils/Estante.java</file>
+            <file>file:/C:/Users/Oliver-Dev/proyects/biblioteca-web-grupo-7/src/java/Recursos/Models/Utils/Idioma.java</file>
+            <file>file:/C:/Users/Oliver-Dev/proyects/biblioteca-web-grupo-7/src/java/Recursos/Models/Utils/Genero.java</file>
+            <file>file:/C:/Users/Oliver-Dev/proyects/biblioteca-web-grupo-7/src/java/Recursos/Models/RecursosFisicos/Libro.java</file>
+            <file>file:/C:/Users/Oliver-Dev/proyects/biblioteca-web-grupo-7/web/privada/componentes/libro.jsp</file>
+            <file>file:/C:/Users/Oliver-Dev/proyects/biblioteca-web-grupo-7/src/java/Recursos/Controllers/LibroController.java</file>
         </group>
     </open-files>
 </project-private>
