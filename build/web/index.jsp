@@ -3,12 +3,45 @@
 <html>
 <head>
     <%@ include file="/configuraciones.jsp"%>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+
+        .form-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 2rem; /* Ajustado el margen superior */
+        }
+
+        label {
+            margin-bottom: 0.5rem;
+        }
+
+        input[type="text"] {
+            padding: 0.5rem;
+            margin-bottom: 1rem;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        .center-button {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+    </style>
     <script>
         function mostrarCamposAdicionales() {
             var tipoMaterial = document.getElementById("tipoMaterial");
             var contenedorLibro = document.getElementById("contenedorLibro");
+            var mensajeTextoBuscar = document.getElementById("mensajeTextoBuscar");
+            var tipoMaterialSeleccionado = tipoMaterial.options[tipoMaterial.selectedIndex].text.toLowerCase();
 
-            if (tipoMaterial.value === "libro") {
+            mensajeTextoBuscar.innerHTML = "Ingrese el texto a buscar para " + tipoMaterialSeleccionado + ":";
+
+            if (tipoMaterialSeleccionado === "libro" || tipoMaterialSeleccionado === "revista") {
                 contenedorLibro.style.display = "block";
             } else {
                 contenedorLibro.style.display = "none";
@@ -25,7 +58,7 @@
 
     <!-- Contenedor para pregunta de búsqueda y JComboBox con margen inferior -->
     <div class="flex flex-col items-center mt-20">
-        <label for="tipoMaterial" class="mb-2">Escoja que material desea buscar:</label>
+        <label for="tipoMaterial" class="mb-2">Escoja qué material desea buscar:</label>
         <select id="tipoMaterial" name="tipoMaterial" class="border p-2" onchange="mostrarCamposAdicionales()">
             <option value="cd">CD</option>
             <option value="dvd">DVD</option>
@@ -34,35 +67,20 @@
         </select>
     </div>
 
-     <!--Crea el textfield para que el usuario escriba: -->
-    
-     <h1> Ingrese le texto a buscar</h1>
-         <form action="procesarFormulario.jsp" method="post">
-        <label for="nombre">Nombre:</label>
-        <input type="text" id="nombre" name="nombre" required>
-        <br>
-        <label for="nombre">Autor:</label>
-        <input type="text" id="autor" name="autor" required>
-        <br>
-        <button type="submit" > Enviar   </button>
-    </form>
-     
-    
-    <%-- Obtener el valor del campo de texto enviado por el formulario 
-    
-    <% String nombre = request.getParameter("nombre"); %>
-
-    <h2>¡Hola, <%= nombre %>!</h2>
-        --%>
-    
-    <!-- Contenedor para campos adicionales de Libro 
-    <div id="contenedorLibro" style="display: none;" class="flex flex-col items-center mt-4">
-        <label for="nombreLibro" class="mb-2">Nombre del libro:</label>
-        <input type="text" id="nombreLibro" name="nombreLibro" class="border p-2 mb-2" />
-
-        <label for="autorLibro" class="mb-2">Autor del libro:</label>
-        <input type="text" id="autorLibro" name="autorLibros" class="border p-2" />
+    <!-- Formulario de búsqueda -->
+    <div class="form-container">
+        <p id="mensajeTextoBuscar" style="margin-bottom: 0;">Ingrese el texto a buscar:</p> <!-- Ajustado el margen inferior -->
+        <form action="procesarFormulario.jsp" method="post">
+            <label for="nombre">Nombre:</label>
+            <input type="text" id="nombre" name="nombre" required>
+            <br>
+            <label for="autor">Autor:</label>
+            <input type="text" id="autor" name="autor" required>
+            <br>
+            <div class="center-button">
+                <button type="submit" class="rounded-md bg-blue-950 px-3 py-2 text-white">Enviar</button>
+            </div>
+        </form>
     </div>
--->
 </body>
 </html>
