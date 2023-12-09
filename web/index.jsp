@@ -71,7 +71,7 @@
     <div class="form-container">
         <p id="mensajeTextoBuscar" style="margin-bottom: 0;">Ingrese el texto a buscar:</p> <!-- Ajustado el margen inferior -->
         <form action="procesarFormulario.jsp" method="post">
-            <label for="nombre">Nombre:</label>
+            <label for="nombre">Nombreas:</label>
             <input type="text" id="nombre" name="nombre" required>
             <br>
             <label for="autor">Autor:</label>
