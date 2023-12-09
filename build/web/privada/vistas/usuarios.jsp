@@ -6,8 +6,9 @@
 
 <%@page import="java.util.Map"%>
 <%@page import="java.util.List"%>
+<%@page import="Recursos.Models.Utils.*"%>
 <%
-    List<Map<String, String>> listaUsuarios = (List<Map<String, String>>) request.getAttribute("usuarios");
+    List<Usuario> listaUsuarios = (List<Usuario>) request.getAttribute("usuarios");
     Integer color = 0;
 %>
 
@@ -39,20 +40,28 @@
                     </div>
                     <!-- end: Termina cabezado de la tabla-->
                     <!-- begin: Empieza contenido de la tabla-->
-                    <% for (Map<String, String> infoUsuario : listaUsuarios) {%>
+                    <% for (Usuario infoUsuario : listaUsuarios) {%>
                     <% if (color % 2 == 0) {%>
                     <div class="flex items-center bg-blue-200 py-2">
                         <%} else {%>
                         <div class="flex items-center bg-blue-50 py-2">
                             <%}%>
 
-                            <div class="w-2/12 px-2"><%=infoUsuario.get("usuario")%></div>
-                            <div class="w-3/12 px-2"><%=infoUsuario.get("correo")%></div>
-                            <div class="w-2/12 px-2"><%=infoUsuario.get("fecha")%></div>
-                            <div class="w-2/12 px-2"><%=infoUsuario.get("telefono")%></div>
-                            <div class="w-2/12 px-2"><%=infoUsuario.get("rol")%></div>
+                            <div class="w-2/12 px-2"><%=infoUsuario.getNombreUsuario()%></div>
+                            <div class="w-3/12 px-2"><%=infoUsuario.getCorreo()%></div>
+                            <div class="w-2/12 px-2"><%=infoUsuario.getFechaNacimiento()%></div>
+                            <div class="w-2/12 px-2"><%=infoUsuario.getTelefono()%></div>
                             <div class="w-2/12 px-2">
-                                <a onClick="abrirRestableceModal('<%=infoUsuario.get("id")%>')" class="inline-block rounded-md bg-purple-400 px-5"
+                                <%if (infoUsuario.getIdRol() == 1) {%>
+                                Administrador
+                                <%} else if (infoUsuario.getIdRol() == 2) {%>
+                                Profesor
+                                <%} else {%>
+                                Alumno
+                                <%}%>
+                            </div>
+                            <div class="w-2/12 px-2">
+                                <a onClick="abrirRestableceModal(<%=infoUsuario.getId()%>)" class="inline-block rounded-md bg-purple-400 px-5"
                                    ><span>Restablecer</span><br />
                                     <span>contraseña</span></a
                                 >
@@ -74,24 +83,24 @@
                     <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" aria-hidden="true"></div>
                     <!-- Ajustamos el tamaño de este div -->
                     <div class="h-auto w-4/6 transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:align-middle">
-                        <form action="" method="post">
+                        <form id="guardarForm" action="${contextPath}/UserController?action=register" method="post">
                             <div class="bg-white px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
                                 <h3 class="text-lg font-medium leading-6 text-gray-900">Agregar un nuevo usuario</h3>
                                 <div class="mt-8 flex flex-wrap">
                                     <div class="my-1 w-1/2 px-3 py-1">
-                                        <input type="text" class="m-0 w-full rounded-lg bg-slate-200 px-2 py-2" name="" id="" placeholder="Escribe el nombre de usuario..." />
+                                        <input type="text" class="m-0 w-full rounded-lg bg-slate-200 px-2 py-2" name="usuario" id="usuario" placeholder="Escribe el nombre de usuario..." />
                                     </div>
                                     <div class="my-1 w-1/2 px-3 py-1">
-                                        <input type="email" class="m-0 w-full rounded-lg bg-slate-200 px-2 py-2" name="" id="" placeholder="Escribe el correo del usuario..." />
+                                        <input type="email" class="m-0 w-full rounded-lg bg-slate-200 px-2 py-2" name="correo" id="correo" placeholder="Escribe el correo del usuario..." />
                                     </div>
                                     <div class="my-1 w-1/2 px-3 py-1">
                                         <input type="date" class="m-0 w-full rounded-lg bg-slate-200 px-2 py-2" name="" id="" placeholder="Escribe la fecha de nacimiento..." />
                                     </div>
                                     <div class="my-1 w-1/2 px-3 py-1">
-                                        <input type="tel" class="m-0 w-full rounded-lg bg-slate-200 px-2 py-2" name="" id="" placeholder="Escribe el teléfono..." />
+                                        <input type="tel" class="m-0 w-full rounded-lg bg-slate-200 px-2 py-2" name="telefono" id="telefono" placeholder="Escribe el teléfono..." />
                                     </div>
                                     <div class="my-1 w-1/2 px-3 py-1">
-                                        <select name="" class="m-0 w-full rounded-lg bg-slate-200 px-2 py-2" id="">
+                                        <select name="rol" class="m-0 w-full rounded-lg bg-slate-200 px-2 py-2" id="rol">
                                             <option value="" selected disabled>Seleccione el rol</option>
                                             <option value="">Administrador</option>
                                             <option value="">Maestro</option>
@@ -108,7 +117,7 @@
                             </div>
                             <div class="px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
                                 <button type="button" id="cerrarModal" class="mt-3 inline-flex w-full justify-center rounded-md border border-transparent bg-blue-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-blue-700 focus:outline-none sm:ml-3 sm:mt-0 sm:w-auto sm:text-sm">Cerrar</button>
-                                <button type="submit" class="mt-3 inline-flex w-full justify-center rounded-md border border-transparent bg-blue-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-blue-700 focus:outline-none sm:ml-3 sm:mt-0 sm:w-auto sm:text-sm">Agregar</button>
+                                <button onClick="guardarUsuario()" class="mt-3 inline-flex w-full justify-center rounded-md border border-transparent bg-blue-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-blue-700 focus:outline-none sm:ml-3 sm:mt-0 sm:w-auto sm:text-sm">Agregar</button>
                             </div>
                         </form>
                     </div>
@@ -122,15 +131,15 @@
                     <div class="h-auto w-4/6 transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:align-middle">
                         <div class="bg-white px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
                             <h3 class="text-lg font-medium leading-6 text-gray-900">Restablecer contraseña</h3>
-                            <form action="" method="post">
+                            <form id="restablerForm">
                                 <div class="mb-8 mt-8 flex flex-wrap">
                                     <!-- Input para colocar el ID y enviarlo en el post-->
-                                    <input type="text" id="idRestablecer" name="id" class="hidden"/>
+                                    <input type="text" id="userId" name="userId" class="hidden"/>
                                     <div class="my-1 w-1/2 px-3 py-1">
-                                        <input type="password" class="m-0 w-full rounded-lg bg-slate-200 px-2 py-2" name="" id="" placeholder="Escribe la nueva contraseña..." />
+                                        <input type="password" class="m-0 w-full rounded-lg bg-slate-200 px-2 py-2" name="newPassword" id="newPassword" placeholder="Escribe la nueva contraseña..." />
                                     </div>
                                     <div class="py-1p-1 my-1 w-1/2 px-3">
-                                        <input type="password" class="m-0 w-full rounded-lg bg-slate-200 px-2 py-2" name="" id="" placeholder="Confirma la nueva contraseña..." />
+                                        <input type="password" class="m-0 w-full rounded-lg bg-slate-200 px-2 py-2" id="confirmPassword" placeholder="Confirma la nueva contraseña..." />
                                     </div>
                                 </div>
                                 <div class="px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
@@ -150,6 +159,7 @@
     const agregarModal = document.getElementById("agregarUsuarios");
     const agregarAbrirBoton = document.getElementById("btnAgregar");
     const agregarCerrarBoton = document.getElementById("cerrarModal");
+    const idUsuarioSelecionado = document.getElementById("userId");
 
     const restablecerModal = document.getElementById("restablecerModal");
     const restablecerCerrarBoton = document.getElementById("cerrarRestablecer");
@@ -162,11 +172,31 @@
         agregarModal.style.display = "none";
     }
 
-    const abrirRestableceModal = (idusuario) => {
+    const abrirRestableceModal = (idUsuario) => {
         restablecerModal.style.display = "block";
+        idUsuarioSeleccionado.value = idUsuario;
     }
 
     restablecerCerrarBoton.onclick = () => {
         restablecerModal.style.display = "none";
+        idUsuarioSeleccionado.value = "";
+    }
+    
+    const guardarUsuario = () => {
+        const datos = new FormData(document.getElementById("guardarForm"));
+        const urlParams = new URLSearchParams(datos);
+        const response = await fetch('${contextPath}/UserController?action=register?' + urlParams, {
+            method: 'POST'
+        })
+        alert("El usuario se ha guardado con éxito")
+    }
+    
+    const restablecerUsuario = (id) => {
+        const datos = new FormData(document.getElementById("restablerForm"));
+        const urlParams = new URLSearchParams(datos);
+        const response = await fetch('${contextPath}/UserController?action=changePassword?userId=' + id + "?" + urlParams, {
+            method: 'POST'
+        })
+        alert("La contraseña del usuario se ha restablecido con éxito")
     }
 </script>
