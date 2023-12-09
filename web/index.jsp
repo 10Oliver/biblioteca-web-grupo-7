@@ -3,7 +3,7 @@
 <html>
 <head>
     <%@ include file="/configuraciones.jsp"%>
-    <style>
+        <style>
         body {
             font-family: Arial, sans-serif;
         }
@@ -52,7 +52,7 @@
 <body class="flex flex-col h-screen bg-slate-100">
     <!-- Franja de color en la parte superior -->
     <div class="bg-blue-400 px-5 py-3 font-bold text-white flex justify-between items-center fixed w-full">
-        <span class="text-lg">Biblioteca - Colegio Amigos De Don Bosco</span>
+        <span class="text-lg">Biblioteca - Colegio Ami  gos De Don Bosco</span>
         <a href="publica/login.jsp" class="rounded-md bg-blue-950 px-3 py-2">Iniciar sesión</a>
     </div>
 
@@ -79,8 +79,12 @@
             <br>
             <div class="center-button">
                 <button type="submit" class="rounded-md bg-blue-950 px-3 py-2 text-white">Enviar</button>
+                
             </div>
         </form>
     </div>
+    
+
+    
 </body>
 </html>
