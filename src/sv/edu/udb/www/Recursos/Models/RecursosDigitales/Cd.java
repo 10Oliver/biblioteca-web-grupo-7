@@ -18,8 +18,8 @@ public class Cd extends RecursoDigital {
     private String autor;
     private String numCanciones;
 
-    private String UPDATE_STATEMENT = "UPDATE Cds SET Titulo = ?, Autor = ?, NumCanciones = ?, Genero = ?, FechaPublicacion = ?, Stock = ?, idEstante = ? WHERE CodigoIdentificacion = ?;";
-    private String INSERT_STATEMENT = "INSERT INTO Cds (Titulo, Autor, NumCanciones, Genero, FechaPublicacion, Stock, idEstante) VALUES (?, ?, ?, ?, ?, ?, ?);";
+    private String UPDATE_STATEMENT = "UPDATE Cds SET Titulo = ?, NumCanciones = ?, FechaPublicacion = ?, Stock = ?, idEstante = ?, idAutor = ?, idGenero = ? WHERE CodigoIdentificacion = ?";
+    private String INSERT_STATEMENT = "INSERT INTO Cds (Titulo, NumCanciones, FechaPublicacion, Stock, idEstante, idAutor, idGenero) VALUES (?, ?, ?, ?, ?, ?, ?);";
     private String DELETE_STATEMENT = "DELETE FROM Cds WHERE CodigoIdentificacion = ?;";
     private String SELECT_SINGLE_STATEMENT = "SELECT Cds.id, Cds.CodigoIdentificacion, Cds.Titulo, Cds.NumCanciones, Cds.FechaPublicacion, Cds.Stock, Estantes.NombreEstante, Autores.NombreAutor, Generos.NombreGenero FROM Cds LEFT JOIN Estantes ON Cds.idEstante = Estantes.id LEFT JOIN Autores ON Cds.idAutor = Autores.id LEFT JOIN Generos ON Cds.idGenero = Generos.id WHERE Cds.CodigoIdentificacion = ?";
     private String SELECT_ALL_STATEMENT = "SELECT Cds.id, Cds.CodigoIdentificacion, Cds.Titulo, Cds.NumCanciones, Cds.FechaPublicacion, Cds.Stock, Estantes.NombreEstante, Autores.NombreAutor, Generos.NombreGenero FROM Cds LEFT JOIN Estantes ON Cds.idEstante = Estantes.id LEFT JOIN Autores ON Cds.idAutor = Autores.id LEFT JOIN Generos ON Cds.idGenero = Generos.id";
@@ -60,14 +60,16 @@ public class Cd extends RecursoDigital {
     public void insertCd(ConnectionDb connection) {
     try {
         int index = 1;
+// private String INSERT_STATEMENT = "INSERT INTO Cds (Titulo, NumCanciones, FechaPublicacion, Stock, idEstante, idAutor, idGenero) VALUES (?, ?, ?, ?, ?, ?, ?);";
+
         PreparedStatement statement = connection.getConnection().prepareStatement(INSERT_STATEMENT);
         statement.setString(index++, getTitulo());
-        statement.setString(index++, getAutor());
         statement.setString(index++, getNumCanciones());
-        statement.setString(index++, getGenero());
         statement.setDate(index++, getFechaPublicacion());
         statement.setInt(index++, getStock());
         statement.setInt(index++, Integer.parseInt(getNombreEstante()));
+        statement.setInt(index++, Integer.parseInt(getAutor()));
+        statement.setInt(index++, Integer.parseInt(getGenero()));
         int rowsInserted = statement.executeUpdate();
         if (rowsInserted > 0) {
             System.out.println("A new Cd was inserted successfully!");
@@ -79,16 +81,17 @@ public class Cd extends RecursoDigital {
 }
 
 public void updateCd(ConnectionDb connection) {
+// private String UPDATE_STATEMENT = "UPDATE Cds SET Titulo = ?, NumCanciones = ?, FechaPublicacion = ?, Stock = ?, idEstante = ?, idAutor = ?, idGenero = ? WHERE CodigoIdentificacion = ?";
     try {
         int index = 1;
         PreparedStatement statement = connection.getConnection().prepareStatement(UPDATE_STATEMENT);
         statement.setString(index++, getTitulo());
-        statement.setString(index++, getAutor());
         statement.setString(index++, getNumCanciones());
-        statement.setString(index++, getGenero());
         statement.setDate(index++, getFechaPublicacion());
         statement.setInt(index++, getStock());
         statement.setInt(index++, Integer.parseInt(getNombreEstante()));
+        statement.setInt(index++, Integer.parseInt(getAutor()));
+        statement.setInt(index++, Integer.parseInt(getGenero()));
         statement.setString(index++, getCodigoIdentificacion());
         int rowsUpdated = statement.executeUpdate();
         if (rowsUpdated > 0) {

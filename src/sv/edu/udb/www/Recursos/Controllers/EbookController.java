@@ -89,8 +89,10 @@ public class EbookController extends HttpServlet{
             Ebook newEbook = extractEbookFromRequest(request);
             newEbook.insertEbook(connection);
             // Redirect or forward to another page as needed
-            StatusResponseIntern jsonResponse = new StatusResponseIntern("Ebook agregado exitosamente",200);
-            response.getWriter().write(jsonResponse.StatusCode());
+            StatusResponseIntern message = new StatusResponseIntern("Successfully Created",200);
+            String jsonResponse = message.StatusCode();
+            response.setContentType("application/json");
+            response.getWriter().write(jsonResponse);
         } catch (SQLException e) {
             // Log and handle database connection or insertion errors
             StatusResponseIntern jsonResponse = new StatusResponseIntern("Ebook no se agrego correctamente",500);
@@ -105,19 +107,20 @@ String ebookCode = request.getParameter("code");
 if (ebookCode != null) {
 
     try(ConnectionDb connection = new ConnectionDb()) {
-        Ebook existingEbook = new Ebook(ebookCode);
-        existingEbook = existingEbook.selectEbook(connection);
-        if (existingEbook != null) {
+        // Ebook existingEbook = new Ebook(ebookCode);
+
+        // existingEbook = existingEbook.selectEbook(connection);
+        // if (existingEbook != null) {
             Ebook updatedEbook = extractEbookFromRequest(request);
             updatedEbook.setCodigoIdentificacion(ebookCode);
             updatedEbook.updateEbook(connection);
             StatusResponseIntern jsonResponse = new StatusResponseIntern("Ebook actualizado exitosamente",200);
             response.getWriter().write(jsonResponse.StatusCode());
-        } else {
-            StatusResponseIntern jsonResponse = new StatusResponseIntern("Ebook no se actualizo exitosamente",500);
-            response.getWriter().write(jsonResponse.StatusCode());
-        }
-    } catch (SQLException e) {
+        // } else {
+            // }
+        } catch (SQLException e) {
+        StatusResponseIntern jsonResponse = new StatusResponseIntern("Ebook no se actualizo exitosamente",500);
+        response.getWriter().write(jsonResponse.StatusCode());
         // Log and handle database connection or update errors
         response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Error updating Ebook");
     }
@@ -132,16 +135,16 @@ protected void doDelete(HttpServletRequest request, HttpServletResponse response
         if (ebookCode != null) {
             try(ConnectionDb connection = new ConnectionDb()) {
                 Ebook existingEbook = new Ebook(ebookCode);
-                existingEbook = existingEbook.selectEbook(connection);
-                if (existingEbook != null) {
+                // existingEbook = existingEbook.selectEbook(connection);
+                // if (existingEbook != null) {
                     existingEbook.deleteEbook(connection);
                     StatusResponseIntern jsonResponse = new StatusResponseIntern("Ebook borrado exitosamente",200);
             response.getWriter().write(jsonResponse.StatusCode());
-                } else {
-                    StatusResponseIntern jsonResponse = new StatusResponseIntern("Ebook no se borro correctamente",500);
-                    response.getWriter().write(jsonResponse.StatusCode());
-                }
-            } catch (SQLException e) {
+                // } else {
+                    // }
+                } catch (SQLException e) {
+                StatusResponseIntern jsonResponse = new StatusResponseIntern("Ebook no se borro correctamente",500);
+                response.getWriter().write(jsonResponse.StatusCode());
                 // Log and handle database connection or deletion errors
                 response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Error deleting Ebook");
             }

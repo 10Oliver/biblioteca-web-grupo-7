@@ -275,5 +275,17 @@ private int id;
         return usuario;
     }
 
+    public static String listToJson(List<Usuario> usuarioList) {
+    StringBuilder jsonListString = new StringBuilder("[");
+    for (Usuario usuario : usuarioList) {
+        jsonListString.append(usuario.toJson()).append(",");
+    }
+    if (!usuarioList.isEmpty()) {
+        jsonListString.deleteCharAt(jsonListString.length() - 1); // Remove the trailing comma
+    }
+    jsonListString.append("]");
+
+    return jsonListString.toString();
+}
 
 }

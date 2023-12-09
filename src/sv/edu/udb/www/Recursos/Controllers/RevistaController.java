@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import sv.edu.udb.www.Recursos.Conexion.ConnectionDb;
+import sv.edu.udb.www.Recursos.Models.StatusResponseIntern;
 import sv.edu.udb.www.Recursos.Models.RecursosFisicos.Revista;
 
 @WebServlet("/RevistaController")
@@ -79,7 +80,10 @@ public class RevistaController extends HttpServlet {
 
         try (ConnectionDb connection = new ConnectionDb()) {
             newRevista.insertRevista(connection);
-            response.sendRedirect("/success.jsp");
+            StatusResponseIntern message = new StatusResponseIntern("Successfully Created",200);
+            String jsonResponse = message.StatusCode();
+            response.setContentType("application/json");
+            response.getWriter().write(jsonResponse);
 
         } catch (SQLException e) {
             // Log and handle the error
@@ -96,21 +100,18 @@ public class RevistaController extends HttpServlet {
             // Logic to update Revista details in the database based on the code
 
             try (ConnectionDb connection = new ConnectionDb()) {
-                Revista revistaModel = new Revista(revistaCode);
-                Revista existingRevista = revistaModel.selectRevista(connection);
-                if (existingRevista != null) {
-                    // Update Revista details based on request parameters
-                    existingRevista.setTitulo(request.getParameter("titulo"));
-                    existingRevista.setAutor(request.getParameter("autor"));
-                    // ... (update other fields)
+
+                    Revista existingRevista = extractRevistaFromRequest(request);
+                    existingRevista.setCodigoIdentificacion(revistaCode);
 
                     // Update the Revista in the database
                     existingRevista.updateRevista(connection);
-                    response.getWriter().println("Revista Updated Successfully");
-                } else {
-                    response.getWriter().println("Revista Not Found");
-                }
-            } catch (SQLException e) {
+                    StatusResponseIntern message = new StatusResponseIntern("Successfully Created",200);
+                    String jsonResponse = message.StatusCode();
+                    response.setContentType("application/json");
+                    response.getWriter().write(jsonResponse);
+                } catch (SQLException e) {
+                response.getWriter().println("Revista Not Found");
                 // Handle database connection or update errors
                 e.printStackTrace();
             }
@@ -127,15 +128,15 @@ public class RevistaController extends HttpServlet {
             // Logic to delete Revista from the database based on the code
             try (ConnectionDb connection = new ConnectionDb()) {
                 Revista revistaModel = new Revista(revistaCode);
-                Revista existingRevista = revistaModel.selectRevista(connection);
-                if (existingRevista != null) {
+                // Revista existingRevista = revistaModel.selectRevista(connection);
+                // if (existingRevista != null) {
                     // Delete the Revista from the database
-                    existingRevista.deleteRevista(connection);
+                    revistaModel.deleteRevista(connection);
                     response.getWriter().println("Revista Deleted Successfully");
-                } else {
-                    response.getWriter().println("Revista Not Found");
-                }
-            } catch (SQLException e) {
+                // } else {
+                    // }
+                } catch (SQLException e) {
+                response.getWriter().println("Revista Not Found");
                 // Handle database connection or deletion errors
                 e.printStackTrace();
             }

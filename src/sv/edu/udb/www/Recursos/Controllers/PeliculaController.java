@@ -82,8 +82,10 @@ public class PeliculaController extends HttpServlet {
 
             // Insert the new Pelicula into the database
             newPelicula.insertPelicula(connection);
-            StatusResponseIntern res = new StatusResponseIntern("pelicula was successfully registered",200);
-            response.getWriter().write(res.StatusCode());
+            StatusResponseIntern message = new StatusResponseIntern("Successfully Created",200);
+            String jsonResponse = message.StatusCode();
+            response.setContentType("application/json");
+            response.getWriter().write(jsonResponse);
         } catch (SQLException e) {
             // Log and handle the error
 
@@ -96,13 +98,18 @@ public class PeliculaController extends HttpServlet {
 // Logic to update an existing Pelicula
 try(ConnectionDb connection = new ConnectionDb()) {
     // Extract Pelicula details from the request
-    Pelicula updatedPelicula = extractPeliculaFromRequest(request);
+    String code = request.getParameter("code");
+    if(code != null)
+    {
+        Pelicula updatedPelicula = extractPeliculaFromRequest(request);
+        updatedPelicula.setCodigoIdentificacion(code);
+        // Update the existing Pelicula in the database
+        updatedPelicula.updatePelicula(connection);
 
-    // Update the existing Pelicula in the database
-    updatedPelicula.updatePelicula(connection);
+        StatusResponseIntern res = new StatusResponseIntern("pelicula was successfully updated",200);
+        response.getWriter().write(res.StatusCode());
 
-    StatusResponseIntern res = new StatusResponseIntern("pelicula was successfully registered",200);
-    response.getWriter().write(res.StatusCode());
+    }
 } catch (SQLException e) {
     // Log and handle the error
 
@@ -112,10 +119,10 @@ try(ConnectionDb connection = new ConnectionDb()) {
 protected void doDelete(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         // Logic to delete an existing Pelicula
-
+        String code = request.getParameter("code");
         try(ConnectionDb connection = new ConnectionDb()) {
             // Extract Pelicula details from the request
-            Pelicula deletedPelicula = extractPeliculaFromRequest(request);
+            Pelicula deletedPelicula = new Pelicula(code);
 
             // Delete the existing Pelicula from the database
             deletedPelicula.deletePelicula(connection);

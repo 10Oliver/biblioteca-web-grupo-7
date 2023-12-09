@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import sv.edu.udb.www.Recursos.Conexion.ConnectionDb;
+import sv.edu.udb.www.Recursos.Models.StatusResponseIntern;
 import sv.edu.udb.www.Recursos.Models.RecursosFisicos.Periodico;
 
 @WebServlet("/PeriodicoController")
@@ -76,7 +77,10 @@ Periodico newPeriodico = extractPeriodicoFromRequest(request);
 
 try (ConnectionDb connection = new ConnectionDb()) {
     newPeriodico.insertPeriodico(connection);
-    response.sendRedirect("/success.jsp");
+    StatusResponseIntern message = new StatusResponseIntern("Successfully Created",200);
+    String jsonResponse = message.StatusCode();
+    response.setContentType("application/json");
+    response.getWriter().write(jsonResponse);
 
 } catch (SQLException e) {
     // Log and handle the error
@@ -92,23 +96,20 @@ protected void doPut(HttpServletRequest request, HttpServletResponse response)
             // Logic to update Periodico details in the database based on the code
 
             try (ConnectionDb connection = new ConnectionDb()) {
-                Periodico periodicoModel = new Periodico(periodicoCode);
-                Periodico existingPeriodico = periodicoModel.selectPeriodico(connection);
-                if (existingPeriodico != null) {
+                // Periodico periodicoModel = new Periodico(periodicoCode);
+                // Periodico existingPeriodico = periodicoModel.selectPeriodico(connection);
+                // if (existingPeriodico != null) {
                     // Update Periodico details based on request parameters
-                    existingPeriodico.setTitulo(request.getParameter("titulo"));
-                    existingPeriodico.setNombrePeriodico(request.getParameter("nombrePeriodico"));
-                    // ... (update other fields)
-
-                    // Update the Periodico in the database
-                    existingPeriodico.updatePeriodico(connection);
+                    Periodico newPeriodico = extractPeriodicoFromRequest(request);
+                    newPeriodico.setCodigoIdentificacion(periodicoCode);
+                    newPeriodico.updatePeriodico(connection);
                     response.getWriter().println("Periodico Updated Successfully");
-                } else {
+                // } else {
+                    // }
+                } catch (SQLException e) {
+                    // Handle database connection or update errors
+                    e.printStackTrace();
                     response.getWriter().println("Periodico Not Found");
-                }
-            } catch (SQLException e) {
-                // Handle database connection or update errors
-                e.printStackTrace();
             }
         } else {
             response.getWriter().println("Periodico Code is required for update");
@@ -123,15 +124,15 @@ if (periodicoCode != null) {
     // Logic to delete Periodico from the database based on the code
     try (ConnectionDb connection = new ConnectionDb()) {
         Periodico periodicoModel = new Periodico(periodicoCode);
-        Periodico existingPeriodico = periodicoModel.selectPeriodico(connection);
-        if (existingPeriodico != null) {
+        // Periodico existingPeriodico = periodicoModel.selectPeriodico(connection);
+        // if (existingPeriodico != null) {
             // Delete the Periodico from the database
-            existingPeriodico.deletePeriodico(connection);
+            periodicoModel.deletePeriodico(connection);
             response.getWriter().println("Periodico Deleted Successfully");
-        } else {
-            response.getWriter().println("Periodico Not Found");
-        }
-    } catch (SQLException e) {
+        // } else {
+            // }
+        } catch (SQLException e) {
+        response.getWriter().println("Periodico Not Found");
         // Handle database connection or deletion errors
         e.printStackTrace();
     }

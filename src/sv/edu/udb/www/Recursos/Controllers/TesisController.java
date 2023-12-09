@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import sv.edu.udb.www.Recursos.Conexion.ConnectionDb;
+import sv.edu.udb.www.Recursos.Models.StatusResponseIntern;
 import sv.edu.udb.www.Recursos.Models.RecursosFisicos.Tesis;
 
 @WebServlet("/TesisController")
@@ -76,7 +77,10 @@ public class TesisController extends HttpServlet{
 
         try (ConnectionDb connection = new ConnectionDb()) {
             newTesis.insertTesis(connection);
-            response.sendRedirect("/success.jsp");
+            StatusResponseIntern message = new StatusResponseIntern("Successfully Created",200);
+            String jsonResponse = message.StatusCode();
+            response.setContentType("application/json");
+            response.getWriter().write(jsonResponse);
 
         } catch (SQLException e) {
             // Log and handle the error
@@ -93,21 +97,20 @@ public class TesisController extends HttpServlet{
             // Logic to update Tesis details in the database based on the code
 
             try (ConnectionDb connection = new ConnectionDb()) {
-                Tesis tesisModel = new Tesis(tesisCode);
-                Tesis existingTesis = tesisModel.selectTesis(connection);
-                if (existingTesis != null) {
-                    // Update Tesis details based on request parameters
-                    existingTesis.setTitulo(request.getParameter("titulo"));
-                    existingTesis.setAutor(request.getParameter("autor"));
-                    // ... (update other fields)
-
+                // Tesis tesisModel = new Tesis(tesisCode);
+                // Tesis existingTesis = tesisModel.selectTesis(connection);
+                // if (existingTesis != null) {
+                    Tesis existingTesis = extractTesisFromRequest(request);
+                    existingTesis.setCodigoIdentificacion(tesisCode);
                     // Update the Tesis in the database
                     existingTesis.updateTesis(connection);
-                    response.getWriter().println("Tesis Updated Successfully");
-                } else {
-                    response.getWriter().println("Tesis Not Found");
-                }
-            } catch (SQLException e) {
+                    StatusResponseIntern message = new StatusResponseIntern("Successfully Updated",200);
+                    String jsonResponse = message.StatusCode();
+                    response.setContentType("application/json");
+                    response.getWriter().write(jsonResponse);
+                    // }
+                } catch (SQLException e) {
+                response.getWriter().println("Tesis Not Found");
                 // Handle database connection or update errors
                 e.printStackTrace();
             }
@@ -124,15 +127,15 @@ public class TesisController extends HttpServlet{
             // Logic to delete Tesis from the database based on the code
             try (ConnectionDb connection = new ConnectionDb()) {
                 Tesis tesisModel = new Tesis(tesisCode);
-                Tesis existingTesis = tesisModel.selectTesis(connection);
-                if (existingTesis != null) {
+                // Tesis existingTesis = tesisModel.selectTesis(connection);
+                // if (existingTesis != null) {
                     // Delete the Tesis from the database
-                    existingTesis.deleteTesis(connection);
+                    tesisModel.deleteTesis(connection);
                     response.getWriter().println("Tesis Deleted Successfully");
-                } else {
-                    response.getWriter().println("Tesis Not Found");
-                }
-            } catch (SQLException e) {
+                // } else {
+                    // }
+                } catch (SQLException e) {
+                response.getWriter().println("Tesis Not Found");
                 // Handle database connection or deletion errors
                 e.printStackTrace();
             }

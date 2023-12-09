@@ -22,8 +22,8 @@ public class Libro extends RecursoFisico {
     private String idioma;
     private String notas;
 
-    private String UPDATE_STATEMENT = "UPDATE Libros SET Titulo = ?, Autor = ?, Editorial = ?, NumeroPaginas = ?, ISBN = ?, Edicion = ?, LugarPublicacion = ?, FechaPublicacion = ?, Genero = ?, Idioma = ?, Notas = ?, Stock = ?, idEstante = ? WHERE CodigoIdentificacion = ?;";
-    private String INSERT_STATEMENT = "INSERT INTO Libros (Titulo, Autor, Editorial, NumeroPaginas, ISBN, Edicion, LugarPublicacion, FechaPublicacion, Genero, Idioma, Notas, Stock, idEstante) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
+    private String UPDATE_STATEMENT = "UPDATE Libros SET Titulo = ?, NumeroPaginas = ?, ISBN = ?, Edicion = ?, FechaPublicacion = ?, Notas = ?, Stock = ?, idEstante = ?, idAutor = ?, idEditorial = ?, idLugarPublicacion = ?, idGenero = ?, idIdioma = ? WHERE CodigoIdentificacion = ?";
+    private String INSERT_STATEMENT = "INSERT INTO Libros (Titulo, NumeroPaginas, ISBN, Edicion, FechaPublicacion, Notas, Stock, idEstante, idAutor, idEditorial, idLugarPublicacion, idGenero, idIdioma) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
     private String DELETE_STATEMENT = "DELETE FROM Libros WHERE CodigoIdentificacion = ?;";
     private String SELECT_SINGLE_STATEMENT = "SELECT Libros.*, Autores.NombreAutor, Generos.NombreGenero, Editoriales.NombreEditorial, Idiomas.NombreIdioma, LugaresPublicacion.NombreLugarPublicacion, Estantes.NombreEstante FROM Libros INNER JOIN Autores ON Libros.idAutor = Autores.id INNER JOIN Generos ON Libros.idGenero = Generos.id INNER JOIN Editoriales ON Libros.idEditorial = Editoriales.id INNER JOIN Idiomas ON Libros.idIdioma = Idiomas.id INNER JOIN LugaresPublicacion ON Libros.idLugarPublicacion = LugaresPublicacion.id INNER JOIN Estantes ON Libros.idEstante = Estantes.id WHERE Libros.id = ?";
     private String SELECT_ALL_STATEMENT = "SELECT Libros.*, Autores.NombreAutor, Generos.NombreGenero, Editoriales.NombreEditorial, Idiomas.NombreIdioma, LugaresPublicacion.NombreLugarPublicacion, Estantes.NombreEstante FROM Libros INNER JOIN Autores ON Libros.idAutor = Autores.id INNER JOIN Generos ON Libros.idGenero = Generos.id INNER JOIN Editoriales ON Libros.idEditorial = Editoriales.id INNER JOIN Idiomas ON Libros.idIdioma = Idiomas.id INNER JOIN LugaresPublicacion ON Libros.idLugarPublicacion = LugaresPublicacion.id INNER JOIN Estantes ON Libros.idEstante = Estantes.id";
@@ -197,20 +197,21 @@ public List<Libro> selectAllLibros(ConnectionDb connection) {
 public void insertLibro(ConnectionDb connection) {
     int index = 1;
     try {
+// private String INSERT_STATEMENT = "INSERT INTO Libros (Titulo, NumeroPaginas, ISBN, Edicion, FechaPublicacion, Notas, Stock, idEstante, idAutor, idEditorial, idLugarPublicacion, idGenero, idIdioma) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
         PreparedStatement statement = connection.getConnection().prepareStatement(INSERT_STATEMENT);
         statement.setString(index++, getTitulo());
-        statement.setString(index++, getAutor());
-        statement.setString(index++, getEditorial());
         statement.setInt(index++, getNumeroPaginas());
         statement.setInt(index++, getIsbn());
         statement.setString(index++, getEdicion());
-        statement.setString(index++, getLugarPublicacion());
         statement.setDate(index++, getFechaPublicacion());
-        statement.setString(index++, getGenero());
-        statement.setString(index++, getIdioma());
         statement.setString(index++, getNotas());
         statement.setInt(index++, getStock());
         statement.setInt(index++, Integer.parseInt(getNombreEstante()));
+        statement.setInt(index++, Integer.parseInt(getAutor()));
+        statement.setInt(index++, Integer.parseInt(getEditorial()));
+        statement.setInt(index++, Integer.parseInt(getLugarPublicacion()));
+        statement.setInt(index++, Integer.parseInt(getGenero()));
+        statement.setInt(index++, Integer.parseInt(getIdioma()));
         int rowsInserted = statement.executeUpdate();
         if (rowsInserted > 0) {
             System.out.println("A new Libro was inserted successfully!");
@@ -224,20 +225,21 @@ public void insertLibro(ConnectionDb connection) {
 public void updateLibro(ConnectionDb connection) {
     int index = 1;
     try {
+// private String UPDATE_STATEMENT = "UPDATE Libros SET Titulo = ?, NumeroPaginas = ?, ISBN = ?, Edicion = ?, FechaPublicacion = ?, Notas = ?, Stock = ?, idEstante = ?, idAutor = ?, idEditorial = ?, idLugarPublicacion = ?, idGenero = ?, idIdioma = ? WHERE CodigoIdentificacion = ?";
         PreparedStatement statement = connection.getConnection().prepareStatement(UPDATE_STATEMENT);
         statement.setString(index++, getTitulo());
-        statement.setString(index++, getAutor());
-        statement.setString(index++, getEditorial());
         statement.setInt(index++, getNumeroPaginas());
         statement.setInt(index++, getIsbn());
         statement.setString(index++, getEdicion());
-        statement.setString(index++, getLugarPublicacion());
         statement.setDate(index++, getFechaPublicacion());
-        statement.setString(index++, getGenero());
-        statement.setString(index++, getIdioma());
         statement.setString(index++, getNotas());
         statement.setInt(index++, getStock());
         statement.setInt(index++, Integer.parseInt(getNombreEstante()));
+        statement.setInt(index++, Integer.parseInt(getAutor()));
+        statement.setInt(index++, Integer.parseInt(getEditorial()));
+        statement.setInt(index++, Integer.parseInt(getLugarPublicacion()));
+        statement.setInt(index++, Integer.parseInt(getGenero()));
+        statement.setInt(index++, Integer.parseInt(getIdioma()));
         statement.setString(index++, getCodigoIdentificacion());
         int rowsUpdated = statement.executeUpdate();
         if (rowsUpdated > 0) {

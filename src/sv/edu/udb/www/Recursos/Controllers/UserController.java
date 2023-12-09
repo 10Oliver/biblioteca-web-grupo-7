@@ -2,6 +2,9 @@
 package sv.edu.udb.www.Recursos.Controllers;
 
 import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 import javax.servlet.RequestDispatcher;
@@ -12,6 +15,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import sv.edu.udb.www.Recursos.Conexion.ConnectionDb;
+import sv.edu.udb.www.Recursos.Models.StatusResponseIntern;
 import sv.edu.udb.www.Recursos.Models.Utils.Usuario;
 
 @WebServlet("/UserController")
@@ -42,7 +46,11 @@ public class UserController extends HttpServlet {
         String action = request.getParameter("action");
 
         if ("register".equals(action)) {
-            registerUser(request, response);
+            try {
+                registerUser(request, response);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
         } else if ("changePassword".equals(action)) {
             changePassword(request, response);
         }else if("listUser".equals(action)){
@@ -52,7 +60,11 @@ public class UserController extends HttpServlet {
 
         switch (action) {
             case "register":
-                registerUser(request, response);
+                try {
+                    registerUser(request, response);
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
                 break;
             case "changePassword":
             changePassword(request, response);
@@ -61,31 +73,46 @@ public class UserController extends HttpServlet {
             // create method to add users
                 break;
             case "getAllUser":
-            getAllUsers(request,response);
+            getAllUsersJson(connection);
                 break;
 
             default:
                 break;
         }
     }
-    private void registerUser(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    private void registerUser(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, ParseException {
         // Get user information from the request
         String nombreUsuario = request.getParameter("nombreUsuario");
         String correo = request.getParameter("correo");
-        // Get other user attributes...
+        String fechaNacimiento = request.getParameter("fechaNacimiento");
+        String telefono = request.getParameter("telefono");
+        String rolId = request.getParameter("rolId");
+        String contrasena = request.getParameter("contrasena");
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+            // Parse the string to a Date object
+        Date parsedDate = dateFormat.parse(fechaNacimiento);
+
+        java.sql.Date sqlDate = new java.sql.Date(parsedDate.getTime());
 
         // Create a new User model
         Usuario user = new Usuario();
         user.setNombreUsuario(nombreUsuario);
         user.setCorreo(correo);
-        // Set other user attributes...
+        user.setTelefono(Integer.parseInt(telefono));
+        user.setFechaNacimiento(sqlDate);
+        user.setIdRol(Integer.parseInt(rolId));
+        user.setContrasena(contrasena);
 
         // Register the user
         ConnectionDb connection = new ConnectionDb();
         user.Registrar(connection);
 
         // Handle the response or redirect to a success page
-        response.sendRedirect("/registrationSuccess.jsp");
+        StatusResponseIntern message = new StatusResponseIntern("Successfully Created",200);
+            String jsonResponse = message.StatusCode();
+            response.setContentType("application/json");
+            response.getWriter().write(jsonResponse);
     }
 
     private void changePassword(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -99,7 +126,10 @@ public class UserController extends HttpServlet {
         user.cambiarContrasena(new ConnectionDb(), newPassword, userId, nombreUsuario);
 
         // Handle the response or redirect to a success page
-        response.sendRedirect("/passwordChangeSuccess.jsp");
+        StatusResponseIntern message = new StatusResponseIntern("Successfully Created",200);
+            String jsonResponse = message.StatusCode();
+            response.setContentType("application/json");
+            response.getWriter().write(jsonResponse);
     }
     private void getAllUsers(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         // Retrieve all users from the database

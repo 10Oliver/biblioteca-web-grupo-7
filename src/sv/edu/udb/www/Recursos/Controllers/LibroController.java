@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import sv.edu.udb.www.Recursos.Conexion.ConnectionDb;
+import sv.edu.udb.www.Recursos.Models.StatusResponseIntern;
 import sv.edu.udb.www.Recursos.Models.RecursosFisicos.Libro;
 @WebServlet("/LibroController")
 public class LibroController extends HttpServlet{
@@ -74,8 +75,10 @@ public class LibroController extends HttpServlet{
             // Insert the new Libro into the database
             newLibro.insertLibro(connection);
 
-            // Redirect or forward to another page as needed
-            response.sendRedirect("/success.jsp");
+            StatusResponseIntern message = new StatusResponseIntern("Successfully Created",200);
+            String jsonResponse = message.StatusCode();
+            response.setContentType("application/json");
+            response.getWriter().write(jsonResponse);
         } catch (SQLException e) {
             // Log and handle the error
             response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Error inserting new Libro");
@@ -87,23 +90,20 @@ public class LibroController extends HttpServlet{
         String libroCode = request.getParameter("code");
         if (libroCode != null) {
             try (ConnectionDb connection = new ConnectionDb()) {
-                Libro libroModel = new Libro(libroCode);
-                Libro existingLibro = libroModel.selectLibro(connection);
-                if (existingLibro != null) {
-                    // Update Libro details based on request parameters
-                    existingLibro.setTitulo(request.getParameter("titulo"));
-                    existingLibro.setAutor(request.getParameter("autor"));
-                    // ... (update other fields)
+                Libro existingLibro = extractLibroFromRequest(request);
+                existingLibro.setCodigoIdentificacion(libroCode);
 
                     // Update the Libro in the database
                     existingLibro.updateLibro(connection);
+                    StatusResponseIntern message = new StatusResponseIntern("Successfully Updated",200);
+                    String jsonResponse = message.StatusCode();
+                    response.setContentType("application/json");
+                    response.getWriter().write(jsonResponse);
                     response.getWriter().println("Libro Updated Successfully");
-                } else {
-                    response.getWriter().println("Libro Not Found");
-                }
-            } catch (SQLException e) {
-                // Handle database connection or update errors
-                e.printStackTrace();
+                } catch (SQLException e) {
+                    // Handle database connection or update errors
+                    e.printStackTrace();
+                    response.getWriter().println("Libro Not Found"+libroCode);
             }
         } else {
             response.getWriter().println("Libro Code is required for update");
@@ -116,15 +116,18 @@ public class LibroController extends HttpServlet{
         if (libroCode != null) {
             try (ConnectionDb connection = new ConnectionDb()) {
                 Libro libroModel = new Libro(libroCode);
-                Libro existingLibro = libroModel.selectLibro(connection);
-                if (existingLibro != null) {
+                // Libro existingLibro = libroModel.selectLibro(connection);
+                // if (existingLibro != null) {
                     // Delete the Libro from the database
-                    existingLibro.deleteLibro(connection);
-                    response.getWriter().println("Libro Deleted Successfully");
-                } else {
-                    response.getWriter().println("Libro Not Found");
-                }
-            } catch (SQLException e) {
+                    libroModel.deleteLibro(connection);
+                    StatusResponseIntern message = new StatusResponseIntern("Successfully Deleted",200);
+                    String jsonResponse = message.StatusCode();
+                    response.setContentType("application/json");
+                    response.getWriter().write(jsonResponse);
+                // } else {
+                    // }
+                } catch (SQLException e) {
+                response.getWriter().println("Libro Not Found");
                 // Handle database connection or deletion errors
                 e.printStackTrace();
             }

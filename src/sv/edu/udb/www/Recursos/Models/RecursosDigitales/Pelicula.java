@@ -18,8 +18,8 @@ public class Pelicula extends RecursoDigital {
     private String duracion;
     private String productor;
     private String paisCiudad;
-    private String UPDATE_STATEMENT = "UPDATE Peliculas SET Titulo = ?, Director = ?, Duracion = ?, Tipo = ?, Productor = ?, PaisCiudad = ?, FechaPublicacion = ?, Stock = ?, idEstante = ? WHERE CodigoIdentificacion = ?;";
-    private String INSERT_STATEMENT = "INSERT INTO Peliculas (Titulo, Director, Duracion, Tipo, Productor, PaisCiudad, FechaPublicacion, Stock, idEstante) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);";
+    private String UPDATE_STATEMENT = "UPDATE Peliculas SET Titulo = ?, Duracion = ?, FechaPublicacion = ?, Stock = ?, idEstante = ?, idDirector = ?, idGenero = ?, idProductor = ?, idPaisCiudad = ? WHERE CodigoIdentificacion = ?";
+    private String INSERT_STATEMENT = "INSERT INTO Peliculas (Titulo, Duracion, FechaPublicacion, Stock, idEstante, idDirector, idGenero, idProductor, idPaisCiudad) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
     private String DELETE_STATEMENT = "DELETE FROM Peliculas WHERE CodigoIdentificacion = ?;";
     private String SELECT_SINGLE_STATEMENT = "SELECT Peliculas.*, Directores.NombreDirector, Generos.NombreGenero, Productores.NombreProductor, PaisCiudad.NombrePaisCiudad, Estantes.NombreEstante FROM Peliculas INNER JOIN Directores ON Peliculas.idDirector = Directores.id INNER JOIN Generos ON Peliculas.idGenero = Generos.id INNER JOIN Productores ON Peliculas.idProductor = Productores.id INNER JOIN PaisCiudad ON Peliculas.idPaisCiudad = PaisCiudad.id INNER JOIN Estantes ON Peliculas.idEstante = Estantes.id WHERE Peliculas.id = ?";
     private String SELECT_ALL_STATEMENT = "SELECT Peliculas.*, Directores.NombreDirector, Generos.NombreGenero, Productores.NombreProductor, PaisCiudad.NombrePaisCiudad, Estantes.NombreEstante FROM Peliculas INNER JOIN Directores ON Peliculas.idDirector = Directores.id INNER JOIN Generos ON Peliculas.idGenero = Generos.id INNER JOIN Productores ON Peliculas.idProductor = Productores.id INNER JOIN PaisCiudad ON Peliculas.idPaisCiudad = PaisCiudad.id INNER JOIN Estantes ON Peliculas.idEstante = Estantes.id";
@@ -81,16 +81,17 @@ public class Pelicula extends RecursoDigital {
 public void insertPelicula(ConnectionDb connection) {
     try {
         int index = 1;
+// private String INSERT_STATEMENT = "INSERT INTO Peliculas (Titulo, Duracion, FechaPublicacion, Stock, idEstante, idDirector, idGenero, idProductor, idPaisCiudad) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
         PreparedStatement statement = connection.getConnection().prepareStatement(INSERT_STATEMENT);
         statement.setString(index++, getTitulo());
-        statement.setString(index++, getDirector());
         statement.setString(index++, getDuracion());
-        statement.setString(index++, getGenero());
-        statement.setString(index++, getProductor());
-        statement.setString(index++, getPaisCiudad());
         statement.setDate(index++, getFechaPublicacion());
         statement.setInt(index++, getStock());
         statement.setInt(index++, Integer.parseInt(getNombreEstante()));
+        statement.setInt(index++, Integer.parseInt(getDirector()));
+        statement.setInt(index++, Integer.parseInt(getGenero()));
+        statement.setInt(index++, Integer.parseInt(getProductor()));
+        statement.setInt(index++, Integer.parseInt(getPaisCiudad()));
         int rowsInserted = statement.executeUpdate();
         if (rowsInserted > 0) {
             System.out.println("A new Pelicula was inserted successfully!");
@@ -103,17 +104,18 @@ public void insertPelicula(ConnectionDb connection) {
 
 public void updatePelicula(ConnectionDb connection) {
     try {
+// private String UPDATE_STATEMENT = "UPDATE Peliculas SET Titulo = ?, Duracion = ?, FechaPublicacion = ?, Stock = ?, idEstante = ?, idDirector = ?, idGenero = ?, idProductor = ?, idPaisCiudad = ? WHERE CodigoIdentificacion = ?";
         int index = 1;
         PreparedStatement statement = connection.getConnection().prepareStatement(UPDATE_STATEMENT);
         statement.setString(index++, getTitulo());
-        statement.setString(index++, getDirector());
         statement.setString(index++, getDuracion());
-        statement.setString(index++, getGenero());
-        statement.setString(index++, getProductor());
-        statement.setString(index++, getPaisCiudad());
         statement.setDate(index++, getFechaPublicacion());
         statement.setInt(index++, getStock());
         statement.setInt(index++, Integer.parseInt(getNombreEstante()));
+        statement.setInt(index++, Integer.parseInt(getDirector()));
+        statement.setInt(index++, Integer.parseInt(getGenero()));
+        statement.setInt(index++, Integer.parseInt(getProductor()));
+        statement.setInt(index++, Integer.parseInt(getPaisCiudad()));
         statement.setString(index++, getCodigoIdentificacion());
         int rowsUpdated = statement.executeUpdate();
         if (rowsUpdated > 0) {

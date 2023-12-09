@@ -20,8 +20,8 @@ public class Tesis extends RecursoFisico {
     private String facultad;
 
     //queries
-    private String UPDATE_STATEMENT = "UPDATE Tesis SET Titulo = ?, Autor = ?, FechaPublicacion = ?, NumeroPaginas = ?, Editorial = ?, NivelAcademico = ?, InstitucionAcademica = ?, Facultad = ?, Stock = ?, idEstante = ? WHERE CodigoIdentificacion = ?;";
-    private String INSERT_STATEMENT = "INSERT INTO Tesis (Titulo, Autor, FechaPublicacion, NumeroPaginas, Editorial, NivelAcademico, InstitucionAcademica, Facultad, Stock, idEstante) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
+    private String UPDATE_STATEMENT = "UPDATE Tesis SET Titulo = ?, FechaPublicacion = ?, NumeroPaginas = ?, Stock = ?, idEstante = ?, idAutor = ?, idEditorial = ?, idNivelAcademico = ?, idInstitucionAcademica = ?, idFacultad = ? WHERE CodigoIdentificacion = ?;";
+    private String INSERT_STATEMENT = "INSERT INTO Tesis (Titulo, FechaPublicacion, NumeroPaginas, Stock, idEstante, idAutor, idEditorial, idNivelAcademico, idInstitucionAcademica, idFacultad) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
     private String DELETE_STATEMENT = "DELETE FROM Tesis WHERE CodigoIdentificacion = ?;";
     private String SELECT_SINGLE_STATEMENT = "SELECT Tesis.*, Autores.NombreAutor, Editoriales.NombreEditorial, NivelesAcademicos.NivelAcademico, InstitucionesAcademicas.NombreInstitucion, Facultades.NombreFacultad, Estantes.NombreEstante FROM Tesis INNER JOIN Autores ON Tesis.idAutor = Autores.id INNER JOIN Editoriales ON Tesis.idEditorial = Editoriales.id INNER JOIN NivelesAcademicos ON Tesis.idNivelAcademico = NivelesAcademicos.id INNER JOIN InstitucionesAcademicas ON Tesis.idInstitucionAcademica = InstitucionesAcademicas.id INNER JOIN Facultades ON Tesis.idFacultad = Facultades.id INNER JOIN Estantes ON Tesis.idEstante = Estantes.id WHERE Tesis.CodigoIdentificacion = ?";
     private String SELECT_ALL_STATEMENT = "SELECT Tesis.*, Autores.NombreAutor, Editoriales.NombreEditorial, NivelesAcademicos.NivelAcademico, InstitucionesAcademicas.NombreInstitucion, Facultades.NombreFacultad, Estantes.NombreEstante FROM Tesis INNER JOIN Autores ON Tesis.idAutor = Autores.id INNER JOIN Editoriales ON Tesis.idEditorial = Editoriales.id INNER JOIN NivelesAcademicos ON Tesis.idNivelAcademico = NivelesAcademicos.id INNER JOIN InstitucionesAcademicas ON Tesis.idInstitucionAcademica = InstitucionesAcademicas.id INNER JOIN Facultades ON Tesis.idFacultad = Facultades.id INNER JOIN Estantes ON Tesis.idEstante = Estantes.id";
@@ -161,17 +161,18 @@ public List<Tesis> selectAllTesis(ConnectionDb connection) {
 public void insertTesis(ConnectionDb connection) {
     try {
         int index = 1;
+            // private String INSERT_STATEMENT = "INSERT INTO Tesis (Titulo, FechaPublicacion, NumeroPaginas, Stock, idEstante, idAutor, idEditorial, idNivelAcademico, idInstitucionAcademica, idFacultad) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
         PreparedStatement statement = connection.getConnection().prepareStatement(INSERT_STATEMENT);
         statement.setString(index++, getTitulo());
-        statement.setString(index++, getAutor());
         statement.setDate(index++, getFechaPublicacion());
         statement.setInt(index++, getNumeroPaginas());
-        statement.setString(index++, getEditorial());
-        statement.setString(index++, getNivelAcademico());
-        statement.setString(index++, getInstitucionAcademica());
-        statement.setString(index++, getFacultad());
         statement.setInt(index++, getStock());
         statement.setInt(index++, Integer.parseInt(getNombreEstante()));
+        statement.setInt(index++, Integer.parseInt(getAutor()));
+        statement.setInt(index++, Integer.parseInt(getEditorial()));
+        statement.setInt(index++, Integer.parseInt(getNivelAcademico()));
+        statement.setInt(index++, Integer.parseInt(getInstitucionAcademica()));
+        statement.setInt(index++, Integer.parseInt(getFacultad()));
         int rowsInserted = statement.executeUpdate();
         if (rowsInserted > 0) {
             System.out.println("A new Tesis was inserted successfully!");
@@ -184,18 +185,19 @@ public void insertTesis(ConnectionDb connection) {
 
 public void updateTesis(ConnectionDb connection) {
     try {
+// private String UPDATE_STATEMENT = "UPDATE Tesis SET Titulo = ?, FechaPublicacion = ?, NumeroPaginas = ?, Stock = ?, idEstante = ?, idAutor = ?, idEditorial = ?, idNivelAcademico = ?, idInstitucionAcademica = ?, idFacultad = ? WHERE CodigoIdentificacion = ?;";
         int index = 1;
         PreparedStatement statement = connection.getConnection().prepareStatement(UPDATE_STATEMENT);
         statement.setString(index++, getTitulo());
-        statement.setString(index++, getAutor());
         statement.setDate(index++, getFechaPublicacion());
         statement.setInt(index++, getNumeroPaginas());
-        statement.setString(index++, getEditorial());
-        statement.setString(index++, getNivelAcademico());
-        statement.setString(index++, getInstitucionAcademica());
-        statement.setString(index++, getFacultad());
         statement.setInt(index++, getStock());
         statement.setInt(index++, Integer.parseInt(getNombreEstante()));
+        statement.setInt(index++, Integer.parseInt(getAutor()));
+        statement.setInt(index++, Integer.parseInt(getEditorial()));
+        statement.setInt(index++, Integer.parseInt(getNivelAcademico()));
+        statement.setInt(index++, Integer.parseInt(getInstitucionAcademica()));
+        statement.setInt(index++, Integer.parseInt(getFacultad()));
         statement.setString(index++, getCodigoIdentificacion());
         int rowsUpdated = statement.executeUpdate();
         if (rowsUpdated > 0) {

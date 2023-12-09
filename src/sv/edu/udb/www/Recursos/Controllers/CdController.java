@@ -106,17 +106,16 @@ public class CdController extends HttpServlet {
         try(ConnectionDb connection = new ConnectionDb()) {
             // ConnectionDb connection = new ConnectionDb();
             newCd.insertCd(connection);
-            response.sendRedirect("/success.jsp");
+            StatusResponseIntern message = new StatusResponseIntern("Successfully Created",200);
+            String jsonResponse = message.StatusCode();
+            response.setContentType("application/json");
+            response.getWriter().write(jsonResponse);
 
         } catch (SQLException e) {
             // Log and handle the error
             // logger.error("Error inserting new CD: " + e.getMessage());
             response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Error inserting new CD");
         }
-
-        // Redirect or forward to another page as needed
-        response.sendRedirect("/success.jsp");
-
     }
 
     protected void doPut(HttpServletRequest request, HttpServletResponse response)
@@ -149,7 +148,7 @@ public class CdController extends HttpServlet {
                     existingCd.setNombreEstante(nombreEstante);
                     // Update the CD in the database
                     existingCd.updateCd(connection);
-                    response.getWriter().println("CD Updated Successfully");
+                    // response.getWriter().println("CD Updated Successfully");
                     StatusResponseIntern jsonResponse = new StatusResponseIntern("Cd actualizado exitosamente",200);
                     response.getWriter().write(jsonResponse.StatusCode());
                 } else {

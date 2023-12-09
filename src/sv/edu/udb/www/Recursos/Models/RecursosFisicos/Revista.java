@@ -20,8 +20,8 @@ public class Revista extends RecursoFisico {
     private String notas;
     private String editorial;
 
-    private String UPDATE_STATEMENT = "UPDATE Revistas SET Titulo = ?, Autor = ?, NumeroPaginas = ?, ISBN = ?, Editorial = ?, Periodicidad = ?, FechaPublicacion = ?, PaisCiudad = ?, Notas = ?, Stock = ?, idEstante = ? WHERE CodigoIdentificacion = ?;";
-    private String INSERT_STATEMENT = "INSERT INTO Revistas (Titulo, Autor, NumeroPaginas, ISBN, Editorial, Periodicidad, FechaPublicacion, PaisCiudad, Notas, Stock, idEstante) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
+    private String UPDATE_STATEMENT = "UPDATE Revistas SET Titulo = ?, NumeroPaginas = ?, ISBN = ?, Periodicidad = ?, FechaPublicacion = ?, Notas = ?, Stock = ?, idEstante = ?, idAutor = ?, idEditorial = ?, idPaisCiudad = ? WHERE CodigoIdentificacion = ?;";
+    private String INSERT_STATEMENT = "INSERT INTO Revistas (Titulo, NumeroPaginas, ISBN, Periodicidad, FechaPublicacion, Notas, Stock, idEstante, idAutor, idEditorial, idPaisCiudad) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
     private String DELETE_STATEMENT = "DELETE FROM Revistas WHERE CodigoIdentificacion = ?;";
     private String SELECT_SINGLE_STATEMENT = "SELECT Revistas.*, Autores.NombreAutor, Editoriales.NombreEditorial, Estantes.NombreEstante, PaisCiudad.NombrePaisCiudad FROM Revistas INNER JOIN Autores ON Revistas.idAutor = Autores.id INNER JOIN Editoriales ON Revistas.idEditorial = Editoriales.id INNER JOIN Estantes ON Revistas.idEstante = Estantes.id INNER JOIN PaisCiudad ON Revistas.idPaisCiudad = PaisCiudad.id WHERE Revistas.id = ?";
     private String SELECT_ALL_STATEMENT = "SELECT Revistas.*, Autores.NombreAutor, Editoriales.NombreEditorial, Estantes.NombreEstante, PaisCiudad.NombrePaisCiudad FROM Revistas INNER JOIN Autores ON Revistas.idAutor = Autores.id INNER JOIN Editoriales ON Revistas.idEditorial = Editoriales.id INNER JOIN Estantes ON Revistas.idEstante = Estantes.id INNER JOIN PaisCiudad ON Revistas.idPaisCiudad = PaisCiudad.id";
@@ -103,18 +103,19 @@ public class Revista extends RecursoFisico {
 public void insertRevista(ConnectionDb connection) {
     try {
         int index = 1;
+// private String INSERT_STATEMENT = "INSERT INTO Revistas (Titulo, NumeroPaginas, ISBN, Periodicidad, FechaPublicacion, Notas, Stock, idEstante, idAutor, idEditorial, idPaisCiudad) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         PreparedStatement statement = connection.getConnection().prepareStatement(INSERT_STATEMENT);
         statement.setString(index++, getTitulo());
-        statement.setString(index++, getAutor());
         statement.setInt(index++, getNumeroPaginas());
         statement.setInt(index++, getIsbn());
-        statement.setString(index++, getEditorial());
         statement.setString(index++, getPeriodicidad());
         statement.setDate(index++, getFechaPublicacion());
-        statement.setString(index++, getPaisCiudad());
         statement.setString(index++, getNotas());
         statement.setInt(index++, getStock());
         statement.setInt(index++, Integer.parseInt(getNombreEstante()));
+        statement.setInt(index++, Integer.parseInt(getAutor()));
+        statement.setInt(index++, Integer.parseInt(getEditorial()));
+        statement.setInt(index++, Integer.parseInt(getPaisCiudad()));
         int rowsInserted = statement.executeUpdate();
         if (rowsInserted > 0) {
             System.out.println("A new Revista was inserted successfully!");
@@ -128,18 +129,19 @@ public void insertRevista(ConnectionDb connection) {
 public void updateRevista(ConnectionDb connection) {
     try {
         int index = 1;
+// private String UPDATE_STATEMENT = "UPDATE Revistas SET Titulo = ?, NumeroPaginas = ?, ISBN = ?, Periodicidad = ?, FechaPublicacion = ?, Notas = ?, Stock = ?, idEstante = ?, idAutor = ?, idEditorial = ?, idPaisCiudad = ? WHERE CodigoIdentificacion = ?;";
         PreparedStatement statement = connection.getConnection().prepareStatement(UPDATE_STATEMENT);
         statement.setString(index++, getTitulo());
-        statement.setString(index++, getAutor());
         statement.setInt(index++, getNumeroPaginas());
         statement.setInt(index++, getIsbn());
-        statement.setString(index++, getEditorial());
         statement.setString(index++, getPeriodicidad());
         statement.setDate(index++, getFechaPublicacion());
-        statement.setString(index++, getPaisCiudad());
         statement.setString(index++, getNotas());
         statement.setInt(index++, getStock());
         statement.setInt(index++, Integer.parseInt(getNombreEstante()));
+        statement.setInt(index++, Integer.parseInt(getAutor()));
+        statement.setInt(index++, Integer.parseInt(getEditorial()));
+        statement.setInt(index++, Integer.parseInt(getPaisCiudad()));
         statement.setString(index++, getCodigoIdentificacion());
         int rowsUpdated = statement.executeUpdate();
         if (rowsUpdated > 0) {

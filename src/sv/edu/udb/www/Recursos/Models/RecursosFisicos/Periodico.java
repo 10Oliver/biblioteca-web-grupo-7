@@ -16,8 +16,8 @@ public class Periodico extends RecursoFisico {
     private String nombrePeriodico;
     private String lugarPublicacion;
 
-    private String UPDATE_STATEMENT = "UPDATE Periodicos SET Titulo = ?, NombrePeriodico = ?, FechaPublicacion = ?, NumeroPaginas = ?, LugarPublicacion = ?, Stock = ?, idEstante = ? WHERE CodigoIdentificacion = ?;";
-    private String INSERT_STATEMENT = "INSERT INTO Periodicos (Titulo, NombrePeriodico, FechaPublicacion, NumeroPaginas, LugarPublicacion, Stock, idEstante) VALUES (?, ?, ?, ?, ?, ?, ?);";
+    private String UPDATE_STATEMENT = "UPDATE Periodicos SET Titulo = ?, NombrePeriodico = ?, FechaPublicacion = ?, NumeroPaginas = ?, Stock = ?, idEstante = ?, idLugarPublicacion = ? WHERE CodigoIdentificacion = ?";
+    private String INSERT_STATEMENT = "INSERT INTO Periodicos (Titulo, NombrePeriodico, FechaPublicacion, NumeroPaginas, Stock, idEstante, idLugarPublicacion) VALUES (?, ?, ?, ?, ?, ?, ?)";
     private String DELETE_STATEMENT = "DELETE FROM Periodicos WHERE CodigoIdentificacion = ?;";
     private String SELECT_SINGLE_STATEMENT = "SELECT Periodicos.*, LugaresPublicacion.NombreLugarPublicacion, Estantes.NombreEstante FROM Periodicos INNER JOIN LugaresPublicacion ON Periodicos.idLugarPublicacion = LugaresPublicacion.id INNER JOIN Estantes ON Periodicos.idEstante = Estantes.id WHERE Periodicos.id = ?";
     private String SELECT_ALL_STATEMENT = "SELECT Periodicos.*, LugaresPublicacion.NombreLugarPublicacion, Estantes.NombreEstante FROM Periodicos INNER JOIN LugaresPublicacion ON Periodicos.idLugarPublicacion = LugaresPublicacion.id INNER JOIN Estantes ON Periodicos.idEstante = Estantes.id";
@@ -123,14 +123,15 @@ public List<Periodico> selectAllPeriodico(ConnectionDb connection) {
 public void insertPeriodico(ConnectionDb connection) {
     try {
         int index = 1;
+// private String INSERT_STATEMENT = "INSERT INTO Periodicos (Titulo, NombrePeriodico, FechaPublicacion, NumeroPaginas, Stock, idEstante, idLugarPublicacion) VALUES (?, ?, ?, ?, ?, ?, ?)";
         PreparedStatement statement = connection.getConnection().prepareStatement(INSERT_STATEMENT);
         statement.setString(index++, getTitulo());
         statement.setString(index++, getNombrePeriodico());
         statement.setDate(index++, getFechaPublicacion());
         statement.setInt(index++, getNumeroPaginas());
-        statement.setString(index++, getLugarPublicacion());
         statement.setInt(index++, getStock());
         statement.setInt(index++, Integer.parseInt(getNombreEstante()));
+        statement.setInt(index++, Integer.parseInt(getLugarPublicacion()));
         int rowsInserted = statement.executeUpdate();
         if (rowsInserted > 0) {
             System.out.println("A new Periodico was inserted successfully!");
@@ -143,15 +144,16 @@ public void insertPeriodico(ConnectionDb connection) {
 
 public void updatePeriodico(ConnectionDb connection) {
     try {
+// private String UPDATE_STATEMENT = "UPDATE Periodicos SET Titulo = ?, NombrePeriodico = ?, FechaPublicacion = ?, NumeroPaginas = ?, Stock = ?, idEstante = ?, idLugarPublicacion = ? WHERE CodigoIdentificacion = ?";
         int index = 1;
         PreparedStatement statement = connection.getConnection().prepareStatement(UPDATE_STATEMENT);
         statement.setString(index++, getTitulo());
         statement.setString(index++, getNombrePeriodico());
         statement.setDate(index++, getFechaPublicacion());
         statement.setInt(index++, getNumeroPaginas());
-        statement.setString(index++, getLugarPublicacion());
         statement.setInt(index++, getStock());
         statement.setInt(index++, Integer.parseInt(getNombreEstante()));
+        statement.setInt(index++, Integer.parseInt(getLugarPublicacion()));
         statement.setString(index++, getCodigoIdentificacion());
         int rowsUpdated = statement.executeUpdate();
         if (rowsUpdated > 0) {
