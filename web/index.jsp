@@ -62,8 +62,8 @@
         <select id="tipoMaterial" name="tipoMaterial" class="border p-2" onchange="mostrarCamposAdicionales()">
             <option value="cd">CD</option>
             <option value="dvd">DVD</option>
-            <option value="libro">Libro</option>
-            <option value="revista">Revista</option>
+            <option value="libro">Libros</option>
+            <option value="revista">Revistas</option>
         </select>
     </div>
 
