@@ -1,62 +1,71 @@
-<%-- 
-    Document   : procesarFormulario
-    Created on : 12-09-2023, 10:10:25 AM
-    Author     : kevin
---%>
-
-
-
-
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<!DOCTYPE html>
+<html>
 <head>
-    <%@ include file="/configuraciones.jsp"%>
-        <style>
+    <meta charset="UTF-8">
+    <title>Resultado de la búsqueda</title>
+    <style>
         body {
             font-family: Arial, sans-serif;
-        }
-
-        .form-container {
             display: flex;
             flex-direction: column;
             align-items: center;
-            margin-top: 2rem; /* Ajustado el margen superior */
-        }
-
-        label {
-            margin-bottom: 0.5rem;
-        }
-
-        input[type="text"] {
-            padding: 0.5rem;
-            margin-bottom: 1rem;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-        }
-
-        .center-button {
-            display: flex;
             justify-content: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        /* Franja de "Iniciar sesión" y "Colegio Amigos De Don Bosco" */
+        .header-bar {
+            background-color: #3498db;
+            color: #fff;
+            padding: 10px;
+            text-align: center;
+            width: 100%;
+            position: fixed;
+            top: 0;
+            display: flex;
+            justify-content: space-between;
             align-items: center;
         }
-    </style>
 
-<%@page contentType="text/html" pageEncoding="UTF-8"%>
-<!DOCTYPE html>
-<html>
-    <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>JSP Page</title>
-    </head>
-    
-        
-          <div class="bg-blue-400 px-5 py-3 font-bold text-white flex justify-between items-center fixed w-full">
-        <span class="text-lg">Biblioteca - Colegio Ami  gos De Don Bosco</span>
-        <a href="publica/login.jsp" class="rounded-md bg-blue-950 px-3 py-2">Iniciar sesión</a>
+        /* Estilo para el botón de volver */
+        a.btn-volver {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #2c3e50; 
+            color: #fff;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        a.btn-volver:hover {
+            background-color: #34495e; 
+        }
+
+        .content {
+            text-align: center;
+            margin-top:-15em; 
+        }
+    </style>
+</head>
+<body>
+    <!-- Franja de "Iniciar sesión" y "Colegio Amigos De Don Bosco" -->
+    <div class="header-bar">
+        <span class="text-lg">Biblioteca - Colegio Amigos De Don Bosco</span>
+        <a href="publica/login.jsp" class="btn-volver">Iniciar sesión</a>
     </div>
+
+    <div class="content">
+        <h2 style="text-align: center;">Resultado de la búsqueda:</h2>
         
-    <tittle>
-        <h1> dd  </h1>
-        <h1> dd </h1>
-        <h1> dd </h1>
-        <h1> Esta es la prubea a recorre lo demás </h1>
-      
+        <p>Tipo de Material: <%= request.getParameter("tipoMaterial") %></p>
+        <p>Nombre: <%= request.getParameter("nombre") %></p>
+        <p>Autor: <%= request.getParameter("autor") %></p>
+
+        <!-- Estilo mejorado para el botón de volver -->
+        <p><a href="index.jsp" class="btn-volver">Volver a la página de búsqueda</a></p>
+    </div>
+</body>
 </html>
