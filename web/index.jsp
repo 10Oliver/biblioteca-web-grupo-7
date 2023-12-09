@@ -34,7 +34,28 @@
         </select>
     </div>
 
-    <!-- Contenedor para campos adicionales de Libro -->
+     <!--Crea el textfield para que el usuario escriba: -->
+    
+     <h1> Ingrese le texto a buscar</h1>
+         <form action="procesarFormulario.jsp" method="post">
+        <label for="nombre">Nombre:</label>
+        <input type="text" id="nombre" name="nombre" required>
+        <br>
+        <label for="nombre">Autor:</label>
+        <input type="text" id="autor" name="autor" required>
+        <br>
+        <button type="submit" > Enviar   </button>
+    </form>
+     
+    
+    <%-- Obtener el valor del campo de texto enviado por el formulario 
+    
+    <% String nombre = request.getParameter("nombre"); %>
+
+    <h2>¡Hola, <%= nombre %>!</h2>
+        --%>
+    
+    <!-- Contenedor para campos adicionales de Libro 
     <div id="contenedorLibro" style="display: none;" class="flex flex-col items-center mt-4">
         <label for="nombreLibro" class="mb-2">Nombre del libro:</label>
         <input type="text" id="nombreLibro" name="nombreLibro" class="border p-2 mb-2" />
@@ -42,6 +63,6 @@
         <label for="autorLibro" class="mb-2">Autor del libro:</label>
         <input type="text" id="autorLibro" name="autorLibros" class="border p-2" />
     </div>
-
+-->
 </body>
 </html>
