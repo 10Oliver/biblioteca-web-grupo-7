@@ -1,4 +1,4 @@
-package conf.sv.edu.udb.www.Recursos.Conexion;
+package Recursos.Conexion;
 
 import java.sql.Connection;
 import java.sql.DriverManager;

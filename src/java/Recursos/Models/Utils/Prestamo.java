@@ -1,4 +1,4 @@
-package conf.sv.edu.udb.www.Recursos.Models.Utils;
+package Recursos.Models.Utils;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -10,7 +10,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
-import conf.sv.edu.udb.www.Recursos.Conexion.ConnectionDb;
+import Recursos.Conexion.ConnectionDb;
 
 public class Prestamo {
 private int id;
