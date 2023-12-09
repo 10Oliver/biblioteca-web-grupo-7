@@ -70,12 +70,12 @@
     <!-- Formulario de búsqueda -->
     <div class="form-container">
         <p id="mensajeTextoBuscar" style="margin-bottom: 0;">Ingrese el texto a buscar:</p> <!-- Ajustado el margen inferior -->
-        <form action="procesarFormulario.jsp" method="post">
+        <form action="procesarFormulario" method="POST">
             <label for="nombre">Nombre:</label>
-            <input type="text" id="nombre" name="nombre" required>
+            <input type="text" id="nombre" name="txtnombre" required>
             <br>
             <label for="autor">Autor:</label>
-            <input type="text" id="autor" name="autor" required>
+            <input type="text" id="autor" name="txtautor" required>
             <br>
             <div class="center-button">
                 <button type="submit" class="rounded-md bg-blue-950 px-3 py-2 text-white">Enviar</button>
@@ -90,8 +90,8 @@
         System.out.println(fnombre);
         System.out.println(fautor);
     %>
-        
-    
+            
+ 
     
 </body>
 </html>
