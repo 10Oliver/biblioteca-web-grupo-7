@@ -4,6 +4,9 @@
     Author     : kevin
 --%>
 
+
+
+
 <head>
     <%@ include file="/configuraciones.jsp"%>
         <style>
@@ -55,11 +58,5 @@
         <h1> dd </h1>
         <h1> dd </h1>
         <h1> Esta es la prubea a recorre lo demás </h1>
-        
-        <% 
-        System.out.println (" prueba ");
-        System.out.println (" Estoy capturando la info pasada");
-        %>
-        
-    
+      
 </html>

@@ -84,7 +84,14 @@
         </form>
     </div>
     
-
+    <%   
+         String fnombre = request.getParameter("nombre");
+        String fautor = request.getParameter("autor");
+        System.out.println(fnombre);
+        System.out.println(fautor);
+    %>
+        
+    
     
 </body>
 </html>
