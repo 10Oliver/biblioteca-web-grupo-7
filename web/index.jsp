@@ -40,7 +40,7 @@
         <input type="text" id="nombreLibro" name="nombreLibro" class="border p-2 mb-2" />
 
         <label for="autorLibro" class="mb-2">Autor del libro:</label>
-        <input type="text" id="autorLibro" name="autorLibro" class="border p-2" />
+        <input type="text" id="autorLibro" name="autorLibros" class="border p-2" />
     </div>
 
 </body>
