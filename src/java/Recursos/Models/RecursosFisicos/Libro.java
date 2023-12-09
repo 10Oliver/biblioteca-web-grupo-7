@@ -21,7 +21,7 @@ public class Libro extends RecursoFisico {
     private String notas;
 
     private String UPDATE_STATEMENT = "UPDATE Libros SET Titulo = ?, Autor = ?, Editorial = ?, NumeroPaginas = ?, ISBN = ?, Edicion = ?, LugarPublicacion = ?, FechaPublicacion = ?, Genero = ?, Idioma = ?, Notas = ?, Stock = ?, idEstante = ? WHERE CodigoIdentificacion = ?;";
-    private String INSERT_STATEMENT = "INSERT INTO Libros (Titulo, Autor, Editorial, NumeroPaginas, ISBN, Edicion, LugarPublicacion, FechaPublicacion, Genero, Idioma, Notas, Stock, idEstante) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
+    private String INSERT_STATEMENT = "INSERT INTO Libros (Titulo, idAutor, idEditorial, NumeroPaginas, ISBN, Edicion, FechaPublicacion, idGenero, idIdioma, Notas, Stock, idEstante) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
     private String DELETE_STATEMENT = "DELETE FROM Libros WHERE CodigoIdentificacion = ?;";
     private String SELECT_SINGLE_STATEMENT = "SELECT Libros.id, Libros.CodigoIdentificacion, Libros.Titulo, Libros.Autor, Libros.Editorial, Libros.NumeroPaginas, Libros.ISBN, Libros.Edicion, Libros.LugarPublicacion, Libros.FechaPublicacion, Libros.Genero, Libros.Idioma, Libros.Notas, Libros.Stock, Estantes.NombreEstante FROM Libros LEFT JOIN Estantes ON Libros.idEstante = Estantes.id WHERE Libros.CodigoIdentificacion = ?;";
     private String SELECT_ALL_STATEMENT = "SELECT Libros.id, Libros.CodigoIdentificacion, Libros.Titulo, Libros.Autor, Libros.Editorial, Libros.NumeroPaginas, Libros.ISBN, Libros.Edicion, Libros.LugarPublicacion, Libros.FechaPublicacion, Libros.Genero, Libros.Idioma, Libros.Notas, Libros.Stock, Estantes.NombreEstante FROM Libros LEFT JOIN Estantes ON Libros.idEstante = Estantes.id";
@@ -138,7 +138,6 @@ public Libro selectLibro(ConnectionDb connection) {
             setNumeroPaginas(resultSet.getInt("NumeroPaginas"));
             setIsbn(resultSet.getInt("ISBN"));
             setEdicion(resultSet.getString("Edicion"));
-            setLugarPublicacion(resultSet.getString("LugarPublicacion"));
             setFechaPublicacion(resultSet.getDate("FechaPublicacion"));
             setGenero(resultSet.getString("Genero"));
             setIdioma(resultSet.getString("Idioma"));
@@ -202,7 +201,6 @@ public void insertLibro(ConnectionDb connection) {
         statement.setInt(index++, getNumeroPaginas());
         statement.setInt(index++, getIsbn());
         statement.setString(index++, getEdicion());
-        statement.setString(index++, getLugarPublicacion());
         statement.setDate(index++, getFechaPublicacion());
         statement.setString(index++, getGenero());
         statement.setString(index++, getIdioma());

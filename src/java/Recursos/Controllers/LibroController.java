@@ -18,7 +18,7 @@ import Recursos.Conexion.ConnectionDb;
 import Recursos.Models.RecursosFisicos.Libro;
 @WebServlet("/LibroController")
 public class LibroController extends HttpServlet{
-    private static final Logger logger = LogManager.getLogger(LibroController.class);
+    //private static final Logger logger = LogManager.getLogger(LibroController.class);
 
      protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -37,23 +37,25 @@ public class LibroController extends HttpServlet{
                 request.getRequestDispatcher("/allLibros.jsp").forward(request, response);
             }
         } catch (SQLException e) {
-            logger.error("Error retrieving libros: " + e.getMessage());
+            //logger.error("Error retrieving libros: " + e.getMessage());
             response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Error retrieving libros");
         }
     }
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+            System.out.print("¿Holis?");
         try (ConnectionDb connection = new ConnectionDb()) {
             Libro newLibro = extractLibroFromRequest(request);
 
             // Insert the new Libro into the database
             newLibro.insertLibro(connection);
+            System.out.print("Si lo hicimos");
 
             // Redirect or forward to another page as needed
             response.sendRedirect("/success.jsp");
         } catch (SQLException e) {
             // Log and handle the error
-            logger.error("Error inserting new Libro: " + e.getMessage());
+            //logger.error("Error inserting new Libro: " + e.getMessage());
             response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Error inserting new Libro");
         }
     }
@@ -120,6 +122,8 @@ public class LibroController extends HttpServlet{
         String autor = request.getParameter("autor");
         String editorial = request.getParameter("editorial");
         String numeroPaginasStr = request.getParameter("numeroPaginas");
+        System.out.println("-----------------------------------");
+        System.out.println(numeroPaginasStr);
         int numeroPaginas = Integer.parseInt(numeroPaginasStr);
         int isbn = Integer.parseInt(request.getParameter("isbn"));
         String edicion = request.getParameter("edicion");

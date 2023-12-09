@@ -3,14 +3,13 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/D:/Documentos/NetBeansProjects/biblioteca_web/web/privada/componentes/eBook.jsp</file>
-            <file>file:/D:/Documentos/NetBeansProjects/biblioteca_web/web/privada/vistas/inventario.jsp</file>
-            <file>file:/D:/Documentos/NetBeansProjects/biblioteca_web/src/java/Recursos/Conexion/ConnectionDb.java</file>
-            <file>file:/D:/Documentos/NetBeansProjects/biblioteca_web/src/java/navegabilidad/producto.java</file>
-            <file>file:/D:/Documentos/NetBeansProjects/biblioteca_web/web/privada/vistas/configuraciones.jsp</file>
-            <file>file:/D:/Documentos/NetBeansProjects/biblioteca_web/src/java/navegabilidad/panelPrincipalControlador.java</file>
-            <file>file:/D:/Documentos/NetBeansProjects/biblioteca_web/web/privada/panelPrincipal.jsp</file>
-            <file>file:/D:/Documentos/NetBeansProjects/biblioteca_web/src/java/navegabilidad/buscar.java</file>
+            <file>file:/C:/Users/Oliver-Dev/proyects/biblioteca-web-grupo-7/src/java/navegabilidad/producto.java</file>
+            <file>file:/C:/Users/Oliver-Dev/proyects/biblioteca-web-grupo-7/src/java/Recursos/Models/Utils/Estante.java</file>
+            <file>file:/C:/Users/Oliver-Dev/proyects/biblioteca-web-grupo-7/src/java/Recursos/Models/Utils/Idioma.java</file>
+            <file>file:/C:/Users/Oliver-Dev/proyects/biblioteca-web-grupo-7/src/java/Recursos/Models/Utils/Genero.java</file>
+            <file>file:/C:/Users/Oliver-Dev/proyects/biblioteca-web-grupo-7/src/java/Recursos/Models/RecursosFisicos/Libro.java</file>
+            <file>file:/C:/Users/Oliver-Dev/proyects/biblioteca-web-grupo-7/web/privada/componentes/libro.jsp</file>
+            <file>file:/C:/Users/Oliver-Dev/proyects/biblioteca-web-grupo-7/src/java/Recursos/Controllers/LibroController.java</file>
         </group>
     </open-files>
 </project-private>
