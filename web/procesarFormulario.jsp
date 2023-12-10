@@ -37,29 +37,6 @@
             justify-content: center;
             align-items: center;
         }
-<<<<<<< HEAD
-=======
-
-        /* Estilo para el botón de volver */
-        a.btn-volver {
-            display: inline-block;
-            padding: 10px 20px;
-            background-color: #2c3e50; /* Cambiado a un tono más oscuro de azul */
-            color: #fff;
-            text-decoration: none;
-            border-radius: 5px;
-            transition: background-color 0.3s;
-        }
-
-        a.btn-volver:hover {
-            background-color: #34495e; /* Cambiado a un tono más oscuro al hacer hover */
-        }
-
-        .content {
-            text-align: center;
-            margin-top:-15em; 
-        }
->>>>>>> parent of 0f4ef81 (vista)
     </style>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
