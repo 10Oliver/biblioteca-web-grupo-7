@@ -195,20 +195,22 @@ public class CdController extends HttpServlet {
 
 
     private String BuscarPorGenero(ConnectionDb connection, String busqueda){
-        Cd cd = new Cd();
-        cd.setGenero(busqueda);
-        cd.selectCdByGenero(connection);
+        Cd cdModel = new Cd();
+        cdModel.setGenero(busqueda);
+        List<Cd> cds = cdModel.selectCdByGenero(connection);
 
-        String jsonResponse = cd.toJson();
+        String jsonResponse = Cd.listToJson(cds);
+
         return jsonResponse;
     }
 
     private String BuscarPorTitulo(ConnectionDb connection, String busqueda){
-        Cd cd = new Cd();
-        cd.setTitulo(busqueda);
-        cd.selectCdByTitulo(connection);
+        Cd cdModel = new Cd();
+        cdModel.setTitulo(busqueda);
+        List<Cd> cds = cdModel.selectCdByTitulo(connection);
 
-        String jsonResponse = cd.toJson();
+        String jsonResponse = Cd.listToJson(cds);
+
         return jsonResponse;
     }
 
@@ -221,11 +223,12 @@ public class CdController extends HttpServlet {
     }
 
     private String BuscarPorAutor(ConnectionDb connection, String busqueda){
-        Cd cd = new Cd();
-        cd.setAutor(busqueda);
-        cd.selectCdByAutor(connection);
+        // This code is retrieving all CDs from the database and converting them into a JSON-like string format.
+        Cd cdModel = new Cd();
+        cdModel.setAutor(busqueda);
+        List<Cd> cds = cdModel.selectCdByAutor(connection);
+        String jsonResponse = Cd.listToJson(cds);
 
-        String jsonResponse = cd.toJson();
         return jsonResponse;
     }
 
