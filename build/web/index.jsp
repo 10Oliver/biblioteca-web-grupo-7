@@ -67,31 +67,46 @@
         </select>
     </div>
 
-    <!-- Formulario de búsqueda -->
-    <div class="form-container">
-        <p id="mensajeTextoBuscar" style="margin-bottom: 0;">Ingrese el texto a buscar:</p> <!-- Ajustado el margen inferior -->
-        <form action="panelPrincipalControlador" method="POST">
-            <label for="nombre">Nombre:</label>
-            <input type="text" id="nombre" name="txtnombre" required>
-            <br>
-            <label for="autor">Autor:</label>
-            <input type="text" id="autor" name="txtautor" required>
-            <br>
-            <div class="center-button">
-                <button type="submit" class="rounded-md bg-blue-950 px-3 py-2 text-white">Enviar</button>
-                
-            </div>
-        </form>
-    </div>
-    
-    <%   
-         String fnombre = request.getParameter("nombre");
-        String fautor = request.getParameter("autor");
-        System.out.println(fnombre);
-        System.out.println(fautor);
-    %>
-            
-    <%-- kevv >
-    
-</body>
-</html>
+ <!-- Formulario de búsqueda -->
+<div class="form-container">
+    <p id="mensajeTextoBuscar" style="margin-bottom: 0;">Ingrese el texto a buscar:</p> <!-- Ajustado el margen inferior -->
+    <form action="procesarFormulario.jsp" method="post">
+        <label for="nombre">Nombre:</label>
+        <input type="text" id="nombre" name="nombre" required>
+        <br>
+        <label for="autor">Autor:</label>
+        <input type="text" id="autor" name="autor" required>
+        <br>
+
+        <!-- Agrega un campo oculto para el tipo de material seleccionado -->
+        <input type="hidden" id="tipoMaterialSeleccionado" name="tipoMaterialSeleccionado" value="">
+
+        <!-- Elimina la etiqueta y el menú desplegable -->
+        
+        <div class="center-button">
+            <button type="submit" class="rounded-md bg-blue-950 px-3 py-2 text-white">Enviar</button>
+        </div>
+    </form>
+</div>
+
+<!-- JavaScript para actualizar el campo oculto con el tipo de material seleccionado -->
+<script>
+    function mostrarCamposAdicionales() {
+        var tipoMaterial = document.getElementById("tipoMaterial");
+        var tipoMaterialSeleccionado = tipoMaterial.options[tipoMaterial.selectedIndex].text.toLowerCase();
+        var tipoMaterialHidden = document.getElementById("tipoMaterialSeleccionado");
+
+        tipoMaterialHidden.value = tipoMaterialSeleccionado;
+
+        var contenedorLibro = document.getElementById("contenedorLibro");
+        var mensajeTextoBuscar = document.getElementById("mensajeTextoBuscar");
+
+        mensajeTextoBuscar.innerHTML = "Ingrese el texto a buscar para " + tipoMaterialSeleccionado + ":";
+
+        if (tipoMaterialSeleccionado === "libro" || tipoMaterialSeleccionado === "revista") {
+            contenedorLibro.style.display = "block";
+        } else {
+            contenedorLibro.style.display = "none";
+        }
+    }
+</script>
